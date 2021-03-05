@@ -8,4 +8,4 @@ describe('GET /', () => {
     expect(response.statusCode).toBe(200)
     expect(response.text).toMatch(/Express/)
   })
-});
+})
