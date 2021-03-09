@@ -304,4 +304,122 @@ describe('Game', () => {
       expect(game.isLose()).toBeTruthy()
     })
   })
+
+  describe('#save', () => {
+    test('width, height が保存されること', () => {
+      // |*| | |
+      // | |*| |
+      const game = initGame(3, 2, Point.of(0, 0), Point.of(1, 1))
+
+      const data = game.save()
+
+      expect(data.width).toBe(3)
+      expect(data.height).toBe(2)
+    })
+
+    test('地雷、開いているセル、フラグの座標が保存されること', () => {
+      // |*| | |
+      // | |*| |
+      const game = initGame(3, 2, Point.of(0, 0), Point.of(1, 1))
+
+      game.open(1, 0)
+      game.open(2, 0)
+
+      game.flag(1, 1)
+
+      // 保存
+      const data = game.save()
+
+      // 検証
+      expect(data.mines).toContainEqual(Point.of(0, 0))
+      expect(data.mines).toContainEqual(Point.of(1, 1))
+
+      expect(data.opens).toContainEqual(Point.of(1, 0))
+      expect(data.opens).toContainEqual(Point.of(2, 0))
+
+      expect(data.flags).toContainEqual(Point.of(1, 1))
+    })
+
+    test('ステータスが保存されること', () => {
+      // |*| | |
+      // | |*| |
+      const game = initGame(3, 2, Point.of(0, 0), Point.of(1, 1))
+
+      game.open(1, 0)
+      game.open(2, 0)
+
+      // PLAY
+      const playData = game.save()
+      expect(playData.status).toEqual('PLAY')
+
+      // LOSE
+      game.open(0, 0)
+      const loseData = game.save()
+      expect(loseData.status).toEqual('LOSE')
+    })
+
+    test('開始時刻が保存されること', () => {
+      // |*| | |
+      // | |*| |
+      const game = initGame(3, 2, Point.of(0, 0), Point.of(1, 1))
+      game.stopWatch.startTime = 1234567890
+
+      const data = game.save()
+
+      expect(data.startTime).toBe(1234567890)
+    })
+  })
+
+  describe('#restore', () => {
+    test('復元できること', () => {
+      const data = {
+        width: 3,
+        height: 2,
+        status: 'PLAY',
+        mines: [{ x: 0, y: 0 }, { x: 1, y: 1 }],
+        opens: [{ x: 1, y: 0 }, { x: 2, y: 0 }],
+        flags: [{ x: 1, y: 1 }],
+        startTime: 999
+      }
+
+      const game = Game.restore(data)
+
+      expect(game.setting.width).toBe(3)
+      expect(game.setting.height).toBe(2)
+      expect(game.setting.numMines).toBe(2)
+      expect(game.status).toBe(Status.PLAY)
+
+      // 地雷
+      expect(game.field.rows[0].map(e => e.isMine)).toEqual([true, false, false])
+      expect(game.field.rows[1].map(e => e.isMine)).toEqual([false, true, false])
+
+      // 開いてるセル
+      expect(game.field.rows[0].map(e => e.isOpen)).toEqual([false, true, true])
+      expect(game.field.rows[1].map(e => e.isOpen)).toEqual([false, false, false])
+
+      // フラグ
+      expect(game.field.rows[0].map(e => e.isFlag)).toEqual([false, false, false])
+      expect(game.field.rows[1].map(e => e.isFlag)).toEqual([false, true, false])
+
+      // 開始時刻
+      expect(game.stopWatch.startTime).toBe(999)
+    })
+
+    test('復元して続きがプレイできること', () => {
+      const game = Game.restore({
+        width: 2,
+        height: 2,
+        mines: [{ x: 0, y: 0 }, { x: 1, y: 1 }],
+        opens: [{ x: 1, y: 0 }],
+        flags: [],
+        status: 'PLAY'
+      })
+
+      expect(game.status).toStrictEqual(Status.PLAY)
+
+      game.open(0, 1)
+
+      expect(game.status).toStrictEqual(Status.WIN)
+    })
+  })
 })

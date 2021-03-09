@@ -188,6 +188,49 @@ class Game {
       }
     }
   }
+
+  /**
+   * 保存用のオブジェクトを出力する。
+   */
+  save () {
+    return {
+      width: this.setting.width,
+      height: this.setting.height,
+      mines: this.field.points(cell => cell.isMine),
+      opens: this.field.points(cell => cell.isOpen),
+      flags: this.field.points(cell => cell.isFlag),
+      status: this.status.name,
+      startTime: this.stopWatch.startTime
+    }
+  }
+
+  /**
+   * 保存用のオブジェクトから元の状態を復元する。
+   * @param {Object} data save メソッドで出力されたデータ
+   */
+  static restore (data) {
+    const instance = new Game()
+
+    instance.setting.width = data.width
+    instance.setting.height = data.height
+    instance.stopWatch.startTime = data.startTime
+    instance.status = Status.parse(data.status)
+
+    instance.field = new Field(data.width, data.height)
+    data.mines.forEach(p => instance.field.cellAt(p).mine())
+    data.opens.forEach(p => instance.field.cellAt(p).open())
+    data.flags.forEach(p => instance.field.cellAt(p).flag())
+
+    // 各マスの周囲の地雷数をカウントし、value にセットする。
+    instance.field.points().forEach(p => {
+      const cell = instance.field.cellAt(p)
+      if (!cell.isMine) {
+        cell.count = instance.field.pointsArround(p, c => c.isMine).length
+      }
+    })
+
+    return instance
+  }
 }
 
 module.exports = Game
