@@ -188,6 +188,21 @@ class Game {
       }
     }
   }
+
+  /**
+   * 保存用のオブジェクトを出力する。
+   */
+  save () {
+    return {
+      width: this.setting.width,
+      height: this.setting.height,
+      mines: this.field.points(cell => cell.isMine),
+      opens: this.field.points(cell => cell.isOpen),
+      flags: this.field.points(cell => cell.isFlag),
+      status: this.status.name,
+      startTime: this.stopWatch.startTime
+    }
+  }
 }
 
 module.exports = Game
