@@ -369,4 +369,57 @@ describe('Game', () => {
       expect(data.startTime).toBe(1234567890)
     })
   })
+
+  describe('#restore', () => {
+    test('復元できること', () => {
+      const data = {
+        width: 3,
+        height: 2,
+        status: 'PLAY',
+        mines: [{ x: 0, y: 0 }, { x: 1, y: 1 }],
+        opens: [{ x: 1, y: 0 }, { x: 2, y: 0 }],
+        flags: [{ x: 1, y: 1 }],
+        startTime: 999
+      }
+
+      const game = Game.restore(data)
+
+      expect(game.setting.width).toBe(3)
+      expect(game.setting.height).toBe(2)
+      expect(game.setting.numMines).toBe(2)
+      expect(game.status).toBe(Status.PLAY)
+
+      // 地雷
+      expect(game.field.rows[0].map(e => e.isMine)).toEqual([true, false, false])
+      expect(game.field.rows[1].map(e => e.isMine)).toEqual([false, true, false])
+
+      // 開いてるセル
+      expect(game.field.rows[0].map(e => e.isOpen)).toEqual([false, true, true])
+      expect(game.field.rows[1].map(e => e.isOpen)).toEqual([false, false, false])
+
+      // フラグ
+      expect(game.field.rows[0].map(e => e.isFlag)).toEqual([false, false, false])
+      expect(game.field.rows[1].map(e => e.isFlag)).toEqual([false, true, false])
+
+      // 開始時刻
+      expect(game.stopWatch.startTime).toBe(999)
+    })
+
+    test('復元して続きがプレイできること', () => {
+      const game = Game.restore({
+        width: 2,
+        height: 2,
+        mines: [{ x: 0, y: 0 }, { x: 1, y: 1 }],
+        opens: [{ x: 1, y: 0 }],
+        flags: [],
+        status: 'PLAY'
+      })
+
+      expect(game.status).toStrictEqual(Status.PLAY)
+
+      game.open(0, 1)
+
+      expect(game.status).toStrictEqual(Status.WIN)
+    })
+  })
 })
