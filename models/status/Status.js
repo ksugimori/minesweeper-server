@@ -8,4 +8,14 @@ const PLAY = new PlayStatus()
 const WIN = new WinStatus()
 const LOSE = new LoseStatus()
 
-module.exports = { INIT, PLAY, WIN, LOSE }
+const values = {}
+values[INIT.name] = INIT
+values[PLAY.name] = PLAY
+values[WIN.name] = WIN
+values[LOSE.name] = LOSE
+
+function parse (name) {
+  return values[name]
+}
+
+module.exports = { INIT, PLAY, WIN, LOSE, parse }
