@@ -304,4 +304,69 @@ describe('Game', () => {
       expect(game.isLose()).toBeTruthy()
     })
   })
+
+  describe('#save', () => {
+    test('width, height が保存されること', () => {
+      // |*| | |
+      // | |*| |
+      const game = initGame(3, 2, Point.of(0, 0), Point.of(1, 1))
+
+      const data = game.save()
+
+      expect(data.width).toBe(3)
+      expect(data.height).toBe(2)
+    })
+
+    test('地雷、開いているセル、フラグの座標が保存されること', () => {
+      // |*| | |
+      // | |*| |
+      const game = initGame(3, 2, Point.of(0, 0), Point.of(1, 1))
+
+      game.open(1, 0)
+      game.open(2, 0)
+
+      game.flag(1, 1)
+
+      // 保存
+      const data = game.save()
+
+      // 検証
+      expect(data.mines).toContainEqual(Point.of(0, 0))
+      expect(data.mines).toContainEqual(Point.of(1, 1))
+
+      expect(data.opens).toContainEqual(Point.of(1, 0))
+      expect(data.opens).toContainEqual(Point.of(2, 0))
+
+      expect(data.flags).toContainEqual(Point.of(1, 1))
+    })
+
+    test('ステータスが保存されること', () => {
+      // |*| | |
+      // | |*| |
+      const game = initGame(3, 2, Point.of(0, 0), Point.of(1, 1))
+
+      game.open(1, 0)
+      game.open(2, 0)
+
+      // PLAY
+      const playData = game.save()
+      expect(playData.status).toEqual('PLAY')
+
+      // LOSE
+      game.open(0, 0)
+      const loseData = game.save()
+      expect(loseData.status).toEqual('LOSE')
+    })
+
+    test('開始時刻が保存されること', () => {
+      // |*| | |
+      // | |*| |
+      const game = initGame(3, 2, Point.of(0, 0), Point.of(1, 1))
+      game.stopWatch.startTime = 1234567890
+
+      const data = game.save()
+
+      expect(data.startTime).toBe(1234567890)
+    })
+  })
 })
