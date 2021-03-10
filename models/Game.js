@@ -213,7 +213,7 @@ class Game {
 
     instance.setting.width = data.width
     instance.setting.height = data.height
-    instance.stopWatch.startTime = data.startTime
+    instance.stopWatch = new StopWatch(data.startTime)
     instance.status = Status.parse(data.status)
 
     instance.field = new Field(data.width, data.height)

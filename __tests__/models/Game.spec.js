@@ -401,8 +401,9 @@ describe('Game', () => {
       expect(game.field.rows[0].map(e => e.isFlag)).toEqual([false, false, false])
       expect(game.field.rows[1].map(e => e.isFlag)).toEqual([false, true, false])
 
-      // 開始時刻
-      expect(game.stopWatch.startTime).toBe(999)
+      // 開始時刻（Game のコンストラクタ内で１回、restore で２回目が呼ばれる）
+      const args = StopWatch.mock.instances[0].constructor.mock.calls[1]
+      expect(args[0]).toBe(999)
     })
 
     test('復元して続きがプレイできること', () => {
