@@ -12,9 +12,10 @@ class StopWatch {
    * 計測を開始する。
    *
    * １秒ごとに playTime の値を更新します。
+   * @param {Number} 開始時刻(unixtime)
    */
-  start () {
-    this.startTime = Date.now()
+  start (startTime) {
+    this.startTime = startTime || Date.now()
     this.timer = setInterval(() => {
       this.playTime = Math.floor((Date.now() - this.startTime) / 1000)
     }, 1000)
