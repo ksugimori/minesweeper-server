@@ -12,6 +12,6 @@ describe('Status', () => {
     expect(Status.parse('INIT')).toBe(Status.INIT)
     expect(Status.parse('PLAY')).toBe(Status.PLAY)
     expect(Status.parse('WIN')).toBe(Status.WIN)
-    expect(Status.parse('LOSE')).toBe(Status.WIN)
+    expect(Status.parse('LOSE')).toBe(Status.LOSE)
   })
 })
