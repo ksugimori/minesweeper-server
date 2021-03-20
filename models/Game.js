@@ -196,11 +196,12 @@ class Game {
     return {
       width: this.setting.width,
       height: this.setting.height,
-      mines: this.field.points(cell => cell.isMine),
-      opens: this.field.points(cell => cell.isOpen),
-      flags: this.field.points(cell => cell.isFlag),
+      numMines: this.setting.numMines,
+      startTime: this.stopWatch.startTime && new Date(this.stopWatch.startTime),
       status: this.status.name,
-      startTime: this.stopWatch.startTime
+      mines: JSON.stringify(this.field.points(cell => cell.isMine)),
+      opens: JSON.stringify(this.field.points(cell => cell.isOpen)),
+      flags: JSON.stringify(this.field.points(cell => cell.isFlag))
     }
   }
 
