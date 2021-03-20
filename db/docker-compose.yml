@@ -5,6 +5,8 @@ services:
     container_name: ms-api
     ports:
       - 80:3000
+    environment:
+      MS_DB_HOST: ms-db
 
   db:
     image: mysql:8.0
@@ -17,8 +19,5 @@ services:
       MYSQL_USER: ms-user
       MYSQL_PASSWORD: ms-password
     volumes:
-      - ms-db-volume:/var/lib/mysql
-
-volumes:
-  ms-db-volume:
-    
+      - ./ddl:/docker-entrypoint-initdb.d
+      - ./mysql_volume:/var/lib/mysql
