@@ -29,7 +29,11 @@ const GameRepository = {
       // eslint-disable-next-line no-unused-vars
       const [results, fields] = await connection.query('SELECT * FROM `games` WHERE id = ?', [id])
 
-      return Game.restore(results[0])
+      if (results[0]) {
+        return Game.restore(results[0])
+      } else {
+        return null
+      }
     } catch (err) {
       console.error(err)
       return null
