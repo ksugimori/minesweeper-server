@@ -190,36 +190,22 @@ class Game {
   }
 
   /**
-   * Point の配列を JSON 文字列としてシリアライズする。
-   * @param {Array} points Point の配列
-   * @returns シリアライズ結果
-   */
-  static serializePointArray (points) {
-    return JSON.stringify(points.map(p => ({ x: p.x, y: p.y })))
-  }
-
-  /**
-   * Point の配列をパースする。
-   * @param {String} points JSON配列文字列
-   * @returns Point の配列
-   */
-  static deserializePointArray (points) {
-    return JSON.parse(points)
-  }
-
-  /**
    * 保存用のオブジェクトを出力する。
    */
   save () {
+    const serializePointArray = function (points) {
+      return JSON.stringify(points.map(p => ({ x: p.x, y: p.y })))
+    }
+
     return {
       width: this.setting.width,
       height: this.setting.height,
       numMines: this.setting.numMines,
       startTime: this.stopWatch.startTime && new Date(this.stopWatch.startTime),
       status: this.status.name,
-      mines: Game.serializePointArray(this.field.points(cell => cell.isMine)),
-      opens: Game.serializePointArray(this.field.points(cell => cell.isOpen)),
-      flags: Game.serializePointArray(this.field.points(cell => cell.isFlag))
+      mines: serializePointArray(this.field.points(cell => cell.isMine)),
+      opens: serializePointArray(this.field.points(cell => cell.isOpen)),
+      flags: serializePointArray(this.field.points(cell => cell.isFlag))
     }
   }
 
@@ -237,9 +223,9 @@ class Game {
 
     instance.field = new Field(data.width, data.height)
 
-    Game.deserializePointArray(data.mines).forEach(p => instance.field.cellAt(p).mine())
-    Game.deserializePointArray(data.opens).forEach(p => instance.field.cellAt(p).open())
-    Game.deserializePointArray(data.flags).forEach(p => instance.field.cellAt(p).flag())
+    data.mines.forEach(p => instance.field.cellAt(p).mine())
+    data.opens.forEach(p => instance.field.cellAt(p).open())
+    data.flags.forEach(p => instance.field.cellAt(p).flag())
 
     // 各マスの周囲の地雷数をカウントし、value にセットする。
     instance.field.points().forEach(p => {

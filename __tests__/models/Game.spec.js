@@ -376,9 +376,9 @@ describe('Game', () => {
         width: 3,
         height: 2,
         status: 'PLAY',
-        mines: '[{ "x": 0, "y": 0 }, { "x": 1, "y": 1 }]',
-        opens: '[{ "x": 1, "y": 0 }, { "x": 2, "y": 0 }]',
-        flags: '[{ "x": 1, "y": 1 }]',
+        mines: [{ x: 0, y: 0 }, { x: 1, y: 1 }],
+        opens: [{ x: 1, y: 0 }, { x: 2, y: 0 }],
+        flags: [{ x: 1, y: 1 }],
         startTime: '2021-01-02T03:04:05.678'
       }
 
@@ -410,9 +410,9 @@ describe('Game', () => {
       const game = Game.restore({
         width: 2,
         height: 2,
-        mines: '[{ "x": 0, "y": 0 }, { "x": 1, "y": 1 }]',
-        opens: '[{ "x": 1, "y": 0 }]',
-        flags: '[]',
+        mines: [{ x: 0, y: 0 }, { x: 1, y: 1 }],
+        opens: [{ x: 1, y: 0 }],
+        flags: [],
         status: 'PLAY'
       })
 
