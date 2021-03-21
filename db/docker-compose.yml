@@ -1,0 +1,26 @@
+version: "3.9"
+services:
+  api:
+    image: ksugimori/minesweeper-server
+    container_name: ms-api
+    ports:
+      - 80:3000
+    environment:
+      MS_DB_HOST: ms-db
+      MS_DB_USER: ms-user
+      MS_DB_PASSWORD: ms-password
+      MS_DB_SCHEMA: minesweeper
+
+  db:
+    image: mysql:8.0
+    container_name: ms-db
+    ports:
+      - 3306:3306
+    environment:
+      MYSQL_ROOT_PASSWORD: my-secret-pw
+      MYSQL_DATABASE: minesweeper
+      MYSQL_USER: ms-user
+      MYSQL_PASSWORD: ms-password
+    volumes:
+      - ./ddl:/docker-entrypoint-initdb.d
+      - ./mysql_volume:/var/lib/mysql

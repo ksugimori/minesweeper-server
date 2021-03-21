@@ -193,14 +193,19 @@ class Game {
    * 保存用のオブジェクトを出力する。
    */
   save () {
+    const serializePointArray = function (points) {
+      return JSON.stringify(points.map(p => ({ x: p.x, y: p.y })))
+    }
+
     return {
       width: this.setting.width,
       height: this.setting.height,
-      mines: this.field.points(cell => cell.isMine),
-      opens: this.field.points(cell => cell.isOpen),
-      flags: this.field.points(cell => cell.isFlag),
+      numMines: this.setting.numMines,
+      startTime: this.stopWatch.startTime && new Date(this.stopWatch.startTime),
       status: this.status.name,
-      startTime: this.stopWatch.startTime
+      mines: serializePointArray(this.field.points(cell => cell.isMine)),
+      opens: serializePointArray(this.field.points(cell => cell.isOpen)),
+      flags: serializePointArray(this.field.points(cell => cell.isFlag))
     }
   }
 
@@ -213,10 +218,11 @@ class Game {
 
     instance.setting.width = data.width
     instance.setting.height = data.height
-    instance.stopWatch = new StopWatch(data.startTime)
+    instance.stopWatch = new StopWatch(new Date(data.startTime).getTime())
     instance.status = Status.parse(data.status)
 
     instance.field = new Field(data.width, data.height)
+
     data.mines.forEach(p => instance.field.cellAt(p).mine())
     data.opens.forEach(p => instance.field.cellAt(p).open())
     data.flags.forEach(p => instance.field.cellAt(p).flag())

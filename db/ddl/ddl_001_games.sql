@@ -1,0 +1,11 @@
+CREATE TABLE games (
+  id INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
+  width INT NOT NULL,
+  height INT NOT NULL,
+  numMines INT NOT NULL,
+  startTime TIMESTAMP,
+  status VARCHAR(10) DEFAULT 'INIT',
+  mines JSON NOT NULL DEFAULT ('[]'),
+  opens JSON NOT NULL DEFAULT ('[]'),
+  flags JSON NOT NULL DEFAULT ('[]')
+);

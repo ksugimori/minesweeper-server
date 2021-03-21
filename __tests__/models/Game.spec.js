@@ -331,13 +331,13 @@ describe('Game', () => {
       const data = game.save()
 
       // 検証
-      expect(data.mines).toContainEqual(Point.of(0, 0))
-      expect(data.mines).toContainEqual(Point.of(1, 1))
+      expect(JSON.parse(data.mines)).toContainEqual({ x: 0, y: 0 })
+      expect(JSON.parse(data.mines)).toContainEqual({ x: 1, y: 1 })
 
-      expect(data.opens).toContainEqual(Point.of(1, 0))
-      expect(data.opens).toContainEqual(Point.of(2, 0))
+      expect(JSON.parse(data.opens)).toContainEqual({ x: 1, y: 0 })
+      expect(JSON.parse(data.opens)).toContainEqual({ x: 2, y: 0 })
 
-      expect(data.flags).toContainEqual(Point.of(1, 1))
+      expect(JSON.parse(data.flags)).toContainEqual({ x: 1, y: 1 })
     })
 
     test('ステータスが保存されること', () => {
@@ -366,7 +366,7 @@ describe('Game', () => {
 
       const data = game.save()
 
-      expect(data.startTime).toBe(1234567890)
+      expect(data.startTime).toStrictEqual(new Date(1234567890))
     })
   })
 
@@ -379,7 +379,7 @@ describe('Game', () => {
         mines: [{ x: 0, y: 0 }, { x: 1, y: 1 }],
         opens: [{ x: 1, y: 0 }, { x: 2, y: 0 }],
         flags: [{ x: 1, y: 1 }],
-        startTime: 999
+        startTime: new Date('2021-01-02T03:04:05.678')
       }
 
       const game = Game.restore(data)
@@ -400,10 +400,6 @@ describe('Game', () => {
       // フラグ
       expect(game.field.rows[0].map(e => e.isFlag)).toEqual([false, false, false])
       expect(game.field.rows[1].map(e => e.isFlag)).toEqual([false, true, false])
-
-      // 開始時刻（Game のコンストラクタ内で１回、restore で２回目が呼ばれる）
-      const args = StopWatch.mock.instances[0].constructor.mock.calls[1]
-      expect(args[0]).toBe(999)
     })
 
     test('復元して続きがプレイできること', () => {
