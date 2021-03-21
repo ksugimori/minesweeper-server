@@ -192,12 +192,13 @@ class Game {
   /**
    * 保存用のオブジェクトを出力する。
    */
-  save () {
+  toJSON () {
     return {
+      id: this.id,
       width: this.setting.width,
       height: this.setting.height,
       numMines: this.setting.numMines,
-      startTime: this.stopWatch.startTime && new Date(this.stopWatch.startTime),
+      startTime: this.stopWatch.toJSON(),
       status: this.status.toJSON(),
       mines: JSON.stringify(this.field.points(cell => cell.isMine)),
       opens: JSON.stringify(this.field.points(cell => cell.isOpen)),
@@ -207,7 +208,7 @@ class Game {
 
   /**
    * 保存用のオブジェクトから元の状態を復元する。
-   * @param {Object} data save メソッドで出力されたデータ
+   * @param {Object} data toJSON メソッドで出力されたデータ
    */
   static restore (data) {
     const instance = new Game()

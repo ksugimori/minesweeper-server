@@ -305,13 +305,13 @@ describe('Game', () => {
     })
   })
 
-  describe('#save', () => {
+  describe('#toJSON', () => {
     test('width, height が保存されること', () => {
       // |*| | |
       // | |*| |
       const game = initGame(3, 2, Point.of(0, 0), Point.of(1, 1))
 
-      const data = game.save()
+      const data = game.toJSON()
 
       expect(data.width).toBe(3)
       expect(data.height).toBe(2)
@@ -328,7 +328,7 @@ describe('Game', () => {
       game.flag(1, 1)
 
       // 保存
-      const data = game.save()
+      const data = game.toJSON()
 
       // 検証
       expect(JSON.parse(data.mines)).toContainEqual({ x: 0, y: 0 })
@@ -349,24 +349,13 @@ describe('Game', () => {
       game.open(2, 0)
 
       // PLAY
-      const playData = game.save()
+      const playData = game.toJSON()
       expect(playData.status).toEqual('PLAY')
 
       // LOSE
       game.open(0, 0)
-      const loseData = game.save()
+      const loseData = game.toJSON()
       expect(loseData.status).toEqual('LOSE')
-    })
-
-    test('開始時刻が保存されること', () => {
-      // |*| | |
-      // | |*| |
-      const game = initGame(3, 2, Point.of(0, 0), Point.of(1, 1))
-      game.stopWatch.startTime = 1234567890
-
-      const data = game.save()
-
-      expect(data.startTime).toStrictEqual(new Date(1234567890))
     })
   })
 

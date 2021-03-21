@@ -38,6 +38,13 @@ class StopWatch {
     this.playTime = 0
     this.startTime = null
   }
+
+  /**
+   * JSON としてシリアライズする。
+   */
+  toJSON () {
+    return this.startTime ? new Date(this.startTime) : null
+  }
 }
 
 module.exports = StopWatch

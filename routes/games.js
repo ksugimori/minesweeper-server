@@ -16,8 +16,7 @@ router.post('/', async function (req, res) {
 
   const created = await gameRepository.create(game)
 
-  // TODO ここ save した結果から mines を削除したもので良いかも
-  created.stopWatch = created.stopWatch.startTime // TODO timer がシリアライズできない
+  // TODO ここ toJSON した結果から mines を削除したもので良いかも
   res.status(201).json(created)
 })
 
