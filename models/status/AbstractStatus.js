@@ -7,6 +7,13 @@ class AbstractStatus {
   }
 
   /**
+   * JSONとしてシリアライズする。
+   */
+  toJSON () {
+    return this.name
+  }
+
+  /**
    * 終了状態か？
    */
   get isEnd () {

@@ -198,7 +198,7 @@ class Game {
       height: this.setting.height,
       numMines: this.setting.numMines,
       startTime: this.stopWatch.startTime && new Date(this.stopWatch.startTime),
-      status: this.status.name,
+      status: this.status.toJSON(),
       mines: JSON.stringify(this.field.points(cell => cell.isMine)),
       opens: JSON.stringify(this.field.points(cell => cell.isOpen)),
       flags: JSON.stringify(this.field.points(cell => cell.isFlag))
