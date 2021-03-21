@@ -331,13 +331,13 @@ describe('Game', () => {
       const data = game.save()
 
       // 検証
-      expect(data.mines).toContainEqual(Point.of(0, 0))
-      expect(data.mines).toContainEqual(Point.of(1, 1))
+      expect(JSON.parse(data.mines)).toContainEqual({ x: 0, y: 0 })
+      expect(JSON.parse(data.mines)).toContainEqual({ x: 1, y: 1 })
 
-      expect(data.opens).toContainEqual(Point.of(1, 0))
-      expect(data.opens).toContainEqual(Point.of(2, 0))
+      expect(JSON.parse(data.opens)).toContainEqual({ x: 1, y: 0 })
+      expect(JSON.parse(data.opens)).toContainEqual({ x: 2, y: 0 })
 
-      expect(data.flags).toContainEqual(Point.of(1, 1))
+      expect(JSON.parse(data.flags)).toContainEqual({ x: 1, y: 1 })
     })
 
     test('ステータスが保存されること', () => {
@@ -366,7 +366,7 @@ describe('Game', () => {
 
       const data = game.save()
 
-      expect(data.startTime).toBe(1234567890)
+      expect(data.startTime).toStrictEqual(new Date(1234567890))
     })
   })
 
@@ -376,10 +376,10 @@ describe('Game', () => {
         width: 3,
         height: 2,
         status: 'PLAY',
-        mines: [{ x: 0, y: 0 }, { x: 1, y: 1 }],
-        opens: [{ x: 1, y: 0 }, { x: 2, y: 0 }],
-        flags: [{ x: 1, y: 1 }],
-        startTime: 999
+        mines: '[{ "x": 0, "y": 0 }, { "x": 1, "y": 1 }]',
+        opens: '[{ "x": 1, "y": 0 }, { "x": 2, "y": 0 }]',
+        flags: '[{ "x": 1, "y": 1 }]',
+        startTime: '2021-01-02T03:04:05.678'
       }
 
       const game = Game.restore(data)
@@ -403,16 +403,16 @@ describe('Game', () => {
 
       // 開始時刻（Game のコンストラクタ内で１回、restore で２回目が呼ばれる）
       const args = StopWatch.mock.instances[0].constructor.mock.calls[1]
-      expect(args[0]).toBe(999)
+      expect(args[0]).toBe(1609524245678)
     })
 
     test('復元して続きがプレイできること', () => {
       const game = Game.restore({
         width: 2,
         height: 2,
-        mines: [{ x: 0, y: 0 }, { x: 1, y: 1 }],
-        opens: [{ x: 1, y: 0 }],
-        flags: [],
+        mines: '[{ "x": 0, "y": 0 }, { "x": 1, "y": 1 }]',
+        opens: '[{ "x": 1, "y": 0 }]',
+        flags: '[]',
         status: 'PLAY'
       })
 

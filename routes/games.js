@@ -9,6 +9,7 @@ router.post('/', async function (req, res) {
   const game = await gameController.create(req.body.setting)
 
   // TODO ここ save した結果から mines を削除したもので良いかも
+  game.stopWatch = game.stopWatch.startTime // TODO timer がシリアライズできない
   res.status(201).json(game)
 })
 
@@ -18,7 +19,7 @@ router.get('/:id', async function (req, res) {
   if (game) {
     res.status(200).json(game)
   } else {
-    res.status(500).end()
+    res.status(404).end()
   }
 })
 

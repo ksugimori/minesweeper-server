@@ -1,6 +1,8 @@
 const request = require('supertest')
 const app = require('../../../app.js')
-const Status = require('../../../models/status/Status')
+const pool = require('../../../db/pool')
+const Game = require('../../../models/Game.js')
+jest.mock('../../../db/pool')
 
 describe('POST /api/games', () => {
   test('Game オブジェクトが返されること', async () => {
@@ -12,14 +14,15 @@ describe('POST /api/games', () => {
       }
     }
 
+    const mockConnection = {
+      format: jest.fn(),
+      query: jest.fn()
+    }
+    mockConnection.query.mockReturnValueOnce([[new Game()], null])
+    pool.promise.mockReturnValueOnce(mockConnection)
+
     const response = await request(app).post('/api/games').send(game)
 
     expect(response.statusCode).toBe(201)
-    expect(response.body.setting.width).toBe(3)
-    expect(response.body.setting.height).toBe(2)
-    expect(response.body.setting.numMines).toBe(1)
-    expect(response.body.field.width).toBe(3)
-    expect(response.body.field.height).toBe(2)
-    expect(response.body.status).toEqual(Status.INIT)
   })
 })

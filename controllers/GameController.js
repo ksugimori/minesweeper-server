@@ -10,14 +10,18 @@ class GameController {
     game.initialize()
     game.open(0, 0)
 
-    // TODO DB保存
     const connection = pool.promise()
 
     try {
       const params = game.save()
+      params.mines = JSON.stringify(params.mines)
+      params.opens = JSON.stringify(params.opens)
+      params.flags = JSON.stringify(params.flags)
 
       // eslint-disable-next-line no-unused-vars
-      const [results, fields] = await connection.query('INSERT INTO games SET ?', params)
+      const sql = connection.format('INSERT INTO `games` SET ?', params)
+      console.log(sql)
+      const [results, fields] = await connection.query(sql)
 
       game.id = results.insertId
 
