@@ -44,4 +44,12 @@ describe('Point', () => {
       expect(result.equals(Point.of(3, 4))).toBeTruthy()
     })
   })
+
+  describe('#toJSON', () => {
+    const p = Point.of(1, 2)
+
+    const result = JSON.stringify(p)
+
+    expect(result).toBe('{"x":1,"y":2}')
+  })
 })

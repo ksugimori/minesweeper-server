@@ -193,19 +193,15 @@ class Game {
    * 保存用のオブジェクトを出力する。
    */
   save () {
-    const serializePointArray = function (points) {
-      return JSON.stringify(points.map(p => ({ x: p.x, y: p.y })))
-    }
-
     return {
       width: this.setting.width,
       height: this.setting.height,
       numMines: this.setting.numMines,
       startTime: this.stopWatch.startTime && new Date(this.stopWatch.startTime),
       status: this.status.name,
-      mines: serializePointArray(this.field.points(cell => cell.isMine)),
-      opens: serializePointArray(this.field.points(cell => cell.isOpen)),
-      flags: serializePointArray(this.field.points(cell => cell.isFlag))
+      mines: JSON.stringify(this.field.points(cell => cell.isMine)),
+      opens: JSON.stringify(this.field.points(cell => cell.isOpen)),
+      flags: JSON.stringify(this.field.points(cell => cell.isFlag))
     }
   }
 

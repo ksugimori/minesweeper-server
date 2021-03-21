@@ -62,6 +62,16 @@ class Point {
   addY (n) {
     return Point.of(this._x, this._y + n)
   }
+
+  /**
+   * JSON としてシリアライズする。
+   */
+  toJSON () {
+    return {
+      x: this._x,
+      y: this._y
+    }
+  }
 }
 
 module.exports = Point
