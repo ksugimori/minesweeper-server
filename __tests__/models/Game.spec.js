@@ -379,7 +379,7 @@ describe('Game', () => {
         mines: [{ x: 0, y: 0 }, { x: 1, y: 1 }],
         opens: [{ x: 1, y: 0 }, { x: 2, y: 0 }],
         flags: [{ x: 1, y: 1 }],
-        startTime: '2021-01-02T03:04:05.678'
+        startTime: new Date('2021-01-02T03:04:05.678')
       }
 
       const game = Game.restore(data)
@@ -400,10 +400,6 @@ describe('Game', () => {
       // フラグ
       expect(game.field.rows[0].map(e => e.isFlag)).toEqual([false, false, false])
       expect(game.field.rows[1].map(e => e.isFlag)).toEqual([false, true, false])
-
-      // 開始時刻（Game のコンストラクタ内で１回、restore で２回目が呼ばれる）
-      const args = StopWatch.mock.instances[0].constructor.mock.calls[1]
-      expect(args[0]).toBe(1609524245678)
     })
 
     test('復元して続きがプレイできること', () => {
