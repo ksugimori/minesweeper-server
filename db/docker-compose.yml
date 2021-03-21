@@ -7,6 +7,9 @@ services:
       - 80:3000
     environment:
       MS_DB_HOST: ms-db
+      MS_DB_USER: ms-user
+      MS_DB_PASSWORD: ms-password
+      MS_DB_SCHEMA: minesweeper
 
   db:
     image: mysql:8.0
