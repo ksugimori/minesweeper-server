@@ -6,7 +6,7 @@ const GameRepository = {
     const connection = pool.promise()
 
     try {
-      const params = game.save()
+      const params = game.toJSON()
 
       // eslint-disable-next-line no-unused-vars
       const sql = connection.format('INSERT INTO `games` SET ?', params)

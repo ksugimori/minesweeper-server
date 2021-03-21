@@ -1,5 +1,6 @@
 const request = require('supertest')
 const app = require('../../../app.js')
+const Game = require('../../../models/Game')
 const gameRepository = require('../../../repositories/gameRepository')
 jest.mock('../../../repositories/gameRepository')
 
@@ -11,16 +12,9 @@ describe('POST /api/games', () => {
       return arg
     })
 
-    const game = {
-      setting: {
-        width: 3,
-        height: 2,
-        numMines: 1
-      },
-      stopWatch: {
-        startTime: 0
-      }
-    }
+    const game = new Game()
+    game.setting.merge({ width: 3, height: 2, numMines: 1 })
+
     const response = await request(app).post('/api/games').send(game)
 
     expect(response.statusCode).toBe(201)
