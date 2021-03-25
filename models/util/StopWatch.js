@@ -42,7 +42,7 @@ class StopWatch {
   /**
    * JSON としてシリアライズする。
    */
-  toJSON () {
+  toRecord () {
     return this.startTime ? new Date(this.startTime) : null
   }
 }

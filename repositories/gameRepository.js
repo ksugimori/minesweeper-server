@@ -6,11 +6,11 @@ const GameRepository = {
     const connection = pool.promise()
 
     try {
-      const params = game.toJSON()
+      const record = game.toRecord()
 
-      // eslint-disable-next-line no-unused-vars
-      const sql = connection.format('INSERT INTO `games` SET ?', params)
+      const sql = connection.format('INSERT INTO `games` SET ?', record)
       console.log(sql)
+      // eslint-disable-next-line no-unused-vars
       const [results, fields] = await connection.query(sql)
 
       game.id = results.insertId
@@ -27,10 +27,10 @@ const GameRepository = {
 
     try {
       // eslint-disable-next-line no-unused-vars
-      const [results, fields] = await connection.query('SELECT * FROM `games` WHERE id = ?', [id])
+      const [records, fields] = await connection.query('SELECT * FROM `games` WHERE id = ?', [id])
 
-      if (results[0]) {
-        return Game.restore(results[0])
+      if (records[0]) {
+        return Game.restore(records[0])
       } else {
         return null
       }

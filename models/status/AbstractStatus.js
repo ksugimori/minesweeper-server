@@ -7,9 +7,9 @@ class AbstractStatus {
   }
 
   /**
-   * JSONとしてシリアライズする。
+   * DB保存用にシリアライズする
    */
-  toJSON () {
+  toRecord () {
     return this.name
   }
 
