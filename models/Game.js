@@ -192,14 +192,14 @@ class Game {
   /**
    * 保存用のオブジェクトを出力する。
    */
-  toJSON () {
+  toRecord () {
     return {
       id: this.id,
       width: this.setting.width,
       height: this.setting.height,
       numMines: this.setting.numMines,
-      startTime: this.stopWatch.toJSON(),
-      status: this.status.toJSON(),
+      startTime: this.stopWatch.toRecord(),
+      status: this.status.toRecord(),
       mines: JSON.stringify(this.field.points(cell => cell.isMine)),
       opens: JSON.stringify(this.field.points(cell => cell.isOpen)),
       flags: JSON.stringify(this.field.points(cell => cell.isFlag))
@@ -208,7 +208,7 @@ class Game {
 
   /**
    * 保存用のオブジェクトから元の状態を復元する。
-   * @param {Object} data toJSON メソッドで出力されたデータ
+   * @param {Object} data toRecord メソッドで出力されたデータ
    */
   static restore (data) {
     const instance = new Game()
@@ -233,6 +233,25 @@ class Game {
     })
 
     return instance
+  }
+
+  /**
+   * クライアントに渡すためにJSONとしてシリアライズする。
+   *
+   * toRecord とは異なり、ゲームが終了するまでは mines は空配列になります。
+   */
+  toJSON () {
+    return {
+      id: this.id,
+      width: this.setting.width,
+      height: this.setting.height,
+      numMines: this.setting.numMines,
+      startTime: this.stopWatch.toRecord(),
+      status: this.status.toRecord(),
+      mines: this.status.isEnd ? JSON.stringify(this.field.points(cell => cell.isMine)) : [],
+      opens: JSON.stringify(this.field.points(cell => cell.isOpen)),
+      flags: JSON.stringify(this.field.points(cell => cell.isFlag))
+    }
   }
 }
 
