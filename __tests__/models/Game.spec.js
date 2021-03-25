@@ -305,13 +305,13 @@ describe('Game', () => {
     })
   })
 
-  describe('#toJSON', () => {
+  describe('#toRecord', () => {
     test('width, height が保存されること', () => {
       // |*| | |
       // | |*| |
       const game = initGame(3, 2, Point.of(0, 0), Point.of(1, 1))
 
-      const data = game.toJSON()
+      const data = game.toRecord()
 
       expect(data.width).toBe(3)
       expect(data.height).toBe(2)
@@ -328,16 +328,16 @@ describe('Game', () => {
       game.flag(1, 1)
 
       // 保存
-      const data = game.toJSON()
+      const record = game.toRecord()
 
       // 検証
-      expect(JSON.parse(data.mines)).toContainEqual({ x: 0, y: 0 })
-      expect(JSON.parse(data.mines)).toContainEqual({ x: 1, y: 1 })
+      expect(JSON.parse(record.mines)).toContainEqual({ x: 0, y: 0 })
+      expect(JSON.parse(record.mines)).toContainEqual({ x: 1, y: 1 })
 
-      expect(JSON.parse(data.opens)).toContainEqual({ x: 1, y: 0 })
-      expect(JSON.parse(data.opens)).toContainEqual({ x: 2, y: 0 })
+      expect(JSON.parse(record.opens)).toContainEqual({ x: 1, y: 0 })
+      expect(JSON.parse(record.opens)).toContainEqual({ x: 2, y: 0 })
 
-      expect(JSON.parse(data.flags)).toContainEqual({ x: 1, y: 1 })
+      expect(JSON.parse(record.flags)).toContainEqual({ x: 1, y: 1 })
     })
 
     test('ステータスが保存されること', () => {
@@ -349,19 +349,19 @@ describe('Game', () => {
       game.open(2, 0)
 
       // PLAY
-      const playData = game.toJSON()
+      const playData = game.toRecord()
       expect(playData.status).toEqual('PLAY')
 
       // LOSE
       game.open(0, 0)
-      const loseData = game.toJSON()
+      const loseData = game.toRecord()
       expect(loseData.status).toEqual('LOSE')
     })
   })
 
   describe('#restore', () => {
     test('復元できること', () => {
-      const data = {
+      const record = {
         width: 3,
         height: 2,
         status: 'PLAY',
@@ -371,7 +371,7 @@ describe('Game', () => {
         startTime: new Date('2021-01-02T03:04:05.678')
       }
 
-      const game = Game.restore(data)
+      const game = Game.restore(record)
 
       expect(game.setting.width).toBe(3)
       expect(game.setting.height).toBe(2)
