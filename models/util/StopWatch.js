@@ -40,10 +40,17 @@ class StopWatch {
   }
 
   /**
-   * JSON としてシリアライズする。
+   * DB保存用にシリアライズする。
    */
   toRecord () {
     return this.startTime ? new Date(this.startTime) : null
+  }
+
+  /**
+   * JSON としてシリアライズする。
+   */
+  toJSON () {
+    return this.startTime ? (new Date(this.startTime)).toISOString() : null
   }
 }
 
