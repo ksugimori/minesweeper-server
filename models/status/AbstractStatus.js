@@ -14,6 +14,13 @@ class AbstractStatus {
   }
 
   /**
+   * JSON用にシリアライズする
+   */
+  toJSON () {
+    return this.name
+  }
+
+  /**
    * 終了状態か？
    */
   get isEnd () {
