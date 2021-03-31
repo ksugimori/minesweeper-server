@@ -24,7 +24,9 @@ describe('POST /api/games', () => {
 
 describe('GET /api/games/{id}', () => {
   test('取得できた場合はステータス 200 が返ること', async () => {
-    gameRepository.get = jest.fn(() => ({ id: 999 }))
+    const game = new Game()
+    game.id = 999
+    gameRepository.get = jest.fn(() => game)
 
     const response = await request(app).get('/api/games/1')
 

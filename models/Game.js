@@ -234,25 +234,6 @@ class Game {
 
     return instance
   }
-
-  /**
-   * クライアントに渡すためにJSONとしてシリアライズする。
-   *
-   * toRecord とは異なり、ゲームが終了するまでは mines は空配列になります。
-   */
-  toJSON () {
-    return {
-      id: this.id,
-      width: this.setting.width,
-      height: this.setting.height,
-      numMines: this.setting.numMines,
-      startTime: this.stopWatch.toRecord(),
-      status: this.status.toRecord(),
-      mines: this.status.isEnd ? JSON.stringify(this.field.points(cell => cell.isMine)) : [],
-      opens: JSON.stringify(this.field.points(cell => cell.isOpen)),
-      flags: JSON.stringify(this.field.points(cell => cell.isFlag))
-    }
-  }
 }
 
 module.exports = Game
