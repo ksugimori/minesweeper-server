@@ -72,8 +72,61 @@ describe('GameView', () => {
       ])
     })
 
-    test.todo('セル一覧に isFlag がセットされていること')
-    test.todo('セル一覧に count がセットされていること')
-    test.todo('セル一覧に isMine がセットされていること')
+    test('セル一覧に isFlag がセットされていること', () => {
+      // |*|2|1|
+      // |2|*|1|
+      const game = initGame(3, 2, Point.of(0, 0), Point.of(1, 1))
+
+      const view = GameView.wrap(game)
+      game.open(0, 1)
+      game.flag(0, 0)
+
+      const result = view.toJSON().cells.map(arr => arr.map(e => e.isFlag))
+      expect(result).toEqual([
+        [true, false, false],
+        [false, false, false]
+      ])
+    })
+
+    test('セル一覧の中でオープンしたセルには count がセットされていること', () => {
+      // |*|2|1|
+      // |2|*|1|
+      const game = initGame(3, 2, Point.of(0, 0), Point.of(1, 1))
+
+      const view = GameView.wrap(game)
+      game.open(1, 0)
+      game.open(2, 0)
+
+      const result = view.toJSON().cells.map(arr => arr.map(e => e.count))
+      expect(result).toEqual([
+        [0, 2, 1],
+        [0, 0, 0]
+      ])
+    })
+
+    test('プレイ中は isMine が全て false, 終了後は地雷のある場所に true がセットされていること', () => {
+      // |*|2|1|
+      // |2|*|1|
+      const game = initGame(3, 2, Point.of(0, 0), Point.of(1, 1))
+
+      const view = GameView.wrap(game)
+      game.open(0, 1)
+
+      // この時点ではすべて false
+      const result1 = view.toJSON().cells.map(arr => arr.map(e => e.isMine))
+      expect(result1).toEqual([
+        [false, false, false],
+        [false, false, false]
+      ])
+
+      // 地雷を開いてゲームオーバーになると全て開く
+      game.open(0, 0)
+
+      const result2 = view.toJSON().cells.map(arr => arr.map(e => e.isMine))
+      expect(result2).toEqual([
+        [true, false, false],
+        [false, true, false]
+      ])
+    })
   })
 })

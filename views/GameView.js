@@ -17,8 +17,20 @@ class GameView {
     return new GameView(game)
   }
 
+  /**
+   * セル一覧
+   */
   get cells () {
-    return this.game.field.rows
+    const conv = (cell) => {
+      return {
+        isMine: this.game.status.isEnd && cell.isMine,
+        isOpen: cell.isOpen,
+        isFlag: cell.isFlag,
+        count: cell.isOpen ? cell.count : 0
+      }
+    }
+
+    return this.game.field.rows.map(row => row.map(conv))
   }
 
   /**
@@ -32,7 +44,7 @@ class GameView {
       numMines: this.game.setting.numMines,
       status: this.game.status.toJSON(),
       startTime: this.game.stopWatch.toJSON(),
-      cells: this.game.field.rows
+      cells: this.cells
     }
   }
 }

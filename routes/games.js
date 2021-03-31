@@ -3,6 +3,7 @@ const router = express.Router()
 const Game = require('../models/Game')
 const Setting = require('../models/Setting')
 const gameRepository = require('../repositories/gameRepository')
+const GameView = require('../views/GameView')
 
 /* Game の作成 */
 router.post('/', async function (req, res) {
@@ -16,15 +17,14 @@ router.post('/', async function (req, res) {
 
   const created = await gameRepository.create(game)
 
-  // TODO ここ toJSON した結果から mines を削除したもので良いかも
-  res.status(201).json(created)
+  res.status(201).json(GameView.wrap(created))
 })
 
 router.get('/:id', async function (req, res) {
   const game = await gameRepository.get(req.params.id)
 
   if (game) {
-    res.status(200).json(game)
+    res.status(200).json(GameView.wrap(game))
   } else {
     res.status(404).end()
   }
