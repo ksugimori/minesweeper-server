@@ -1,5 +1,5 @@
 const Game = require('../models/Game')
-const pool = require('../db/pool.js')
+const pool = require('../database/pool.js')
 
 const GameRepository = {
   async create (game) {
