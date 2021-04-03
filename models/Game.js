@@ -213,6 +213,8 @@ class Game {
   static restore (data) {
     const instance = new Game()
 
+    instance.id = data.id
+
     instance.setting.width = data.width
     instance.setting.height = data.height
     instance.stopWatch = new StopWatch(new Date(data.startTime).getTime())
