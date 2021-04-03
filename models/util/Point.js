@@ -40,6 +40,24 @@ class Point {
   }
 
   /**
+   * 座標を一意に特定するID文字列
+   */
+  get id () {
+    return `${this._x}_${this._y}`
+  }
+
+  /**
+   * ID文字列をパースする。
+   * @param {String} id ID文字列
+   * @returns Point
+   */
+  static parseId (id) {
+    const values = id.split('_').map(s => parseInt(s))
+
+    return Point.of(values[0], values[1])
+  }
+
+  /**
    * オブジェクトの同値比較。
    * @param {Point} other 比較対象のオブジェクト
    */
