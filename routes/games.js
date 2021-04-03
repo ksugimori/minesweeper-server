@@ -1,4 +1,5 @@
 const express = require('express')
+const { route } = require('.')
 const router = express.Router()
 const Game = require('../models/Game')
 const Setting = require('../models/Setting')
@@ -25,6 +26,26 @@ router.get('/:id', async function (req, res) {
 
   if (game) {
     res.status(200).json(GameView.wrap(game))
+  } else {
+    res.status(404).end()
+  }
+})
+
+router.post('/:id/flags', async function (req, res) {
+  const game = await gameRepository.get(req.params.id)
+
+  if (game) {
+    const point = { x: req.body.x, y: req.body.y }
+
+    if (game.field.cellAt(point).isFlag) {
+      res.status(204).end()
+      return
+    }
+
+    game.flag(point.x, point.y)
+    await gameRepository.update(game)
+
+    res.status(201).json(point)
   } else {
     res.status(404).end()
   }
