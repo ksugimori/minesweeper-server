@@ -46,10 +46,29 @@ describe('Point', () => {
   })
 
   describe('#toJSON', () => {
-    const p = Point.of(1, 2)
+    test('JSONとしてシリアライズしたときに x, y 座標が残ること', () => {
+      const p = Point.of(1, 2)
 
-    const result = JSON.stringify(p)
+      const result = JSON.stringify(p)
 
-    expect(result).toBe('{"x":1,"y":2}')
+      expect(result).toBe('{"x":1,"y":2}')
+    })
+  })
+
+  describe('#id', () => {
+    test('x, y 座標をアンダースコアでつないだ文字列であること', () => {
+      const p = Point.of(1, 2)
+
+      expect(p.id).toBe('1_2')
+    })
+  })
+
+  describe('#parseId', () => {
+    test('id から元の Point を復元できること', () => {
+      const p = Point.parseId('12_34')
+
+      expect(p.x).toBe(12)
+      expect(p.y).toBe(34)
+    })
   })
 })
