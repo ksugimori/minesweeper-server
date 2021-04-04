@@ -1,10 +1,10 @@
 const request = require('supertest')
-const app = require('../../../app.js')
-const Game = require('../../../models/Game')
-const random = require('../../../models/util/random')
-const Point = require('../../../models/util/Point')
-const gameRepository = require('../../../repositories/gameRepository')
-jest.mock('../../../repositories/gameRepository')
+const app = require('../../app.js')
+const Game = require('../../models/Game')
+const random = require('../../models/util/random')
+const Point = require('../../models/util/Point')
+const gameRepository = require('../../repositories/gameRepository')
+jest.mock('../../repositories/gameRepository')
 
 /**
  * Game オブジェクトを初期化する。
