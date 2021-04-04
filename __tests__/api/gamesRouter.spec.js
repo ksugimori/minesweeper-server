@@ -1,6 +1,7 @@
 const request = require('supertest')
 const app = require('../../app.js')
 const Game = require('../../models/Game')
+const DataNotFoundException = require('../../exceptions/DataNotFoundException')
 const gameRepository = require('../../repositories/gameRepository')
 jest.mock('../../repositories/gameRepository')
 
@@ -35,7 +36,9 @@ describe('GET /api/games/{id}', () => {
   })
 
   test('取得できなかった場合はステータス 404 が返ること', async () => {
-    gameRepository.get = jest.fn(() => null)
+    gameRepository.get = jest.fn(() => {
+      throw new DataNotFoundException()
+    })
 
     const response = await request(app).get('/api/games/1')
 
