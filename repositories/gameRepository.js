@@ -1,5 +1,6 @@
 const Game = require('../models/Game')
 const pool = require('../database/pool.js')
+const DataNotFoundException = require('../exceptions/DataNotFoundException')
 
 const GameRepository = {
   async create (game) {
@@ -25,18 +26,13 @@ const GameRepository = {
   async get (id) {
     const connection = pool.promise()
 
-    try {
-      // eslint-disable-next-line no-unused-vars
-      const [records, fields] = await connection.query('SELECT * FROM `games` WHERE id = ?', [id])
+    // eslint-disable-next-line no-unused-vars
+    const [records, fields] = await connection.query('SELECT * FROM `games` WHERE id = ?', [id])
 
-      if (records[0]) {
-        return Game.restore(records[0])
-      } else {
-        return null
-      }
-    } catch (err) {
-      console.error(err)
-      return null
+    if (records[0]) {
+      return Game.restore(records[0])
+    } else {
+      throw new DataNotFoundException(`game id = ${id} not found.`)
     }
   },
 
