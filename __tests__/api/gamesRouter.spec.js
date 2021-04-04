@@ -1,8 +1,8 @@
 const request = require('supertest')
-const app = require('../../../app.js')
-const Game = require('../../../models/Game')
-const gameRepository = require('../../../repositories/gameRepository')
-jest.mock('../../../repositories/gameRepository')
+const app = require('../../app.js')
+const Game = require('../../models/Game')
+const gameRepository = require('../../repositories/gameRepository')
+jest.mock('../../repositories/gameRepository')
 
 describe('POST /api/games', () => {
   test('Game オブジェクトが返されること', async () => {

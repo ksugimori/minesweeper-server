@@ -38,6 +38,26 @@ const GameRepository = {
       console.error(err)
       return null
     }
+  },
+
+  async update (game) {
+    const connection = pool.promise()
+
+    try {
+      const record = game.toRecord()
+
+      const sql = connection.format('UPDATE `games` SET flags = ? WHERE id = ?', [record.flags, record.id])
+      console.log(sql)
+      // eslint-disable-next-line no-unused-vars
+      const [results, fields] = await connection.query(sql)
+
+      game.id = results.insertId
+
+      return game
+    } catch (err) {
+      console.error(err)
+      return null
+    }
   }
 }
 
