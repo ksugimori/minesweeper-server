@@ -85,6 +85,23 @@ describe('POST /api/games/:gameId/flags', () => {
   })
 })
 
-describe('POST /api/games/:gameId/flags/:id', () => {
-  test.todo('DELETE でフラグが外されること')
+describe('DELETE /api/games/:gameId/flags/:id', () => {
+  test('フラグが外されること', async () => {
+    // |1|*|2|
+    // |1|2|*|
+    const game = initGame(3, 2, Point.of(1, 0), Point.of(2, 1))
+    game.id = 999
+    game.open(0, 0)
+
+    game.flag(1, 0)
+
+    gameRepository.get = jest.fn(() => game)
+    gameRepository.update = jest.fn((x) => x)
+
+    const response = await request(app).delete('/api/games/999/flags/1_0')
+
+    expect(response.statusCode).toBe(204)
+
+    expect(game.field.cellAt(Point.of(1, 0)).isFlag).toBeFalsy()
+  })
 })
