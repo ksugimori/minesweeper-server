@@ -1,10 +1,10 @@
 const express = require('express')
-const { route } = require('.')
 const router = express.Router()
 const Game = require('../models/Game')
 const Setting = require('../models/Setting')
 const gameRepository = require('../repositories/gameRepository')
 const GameView = require('../views/GameView')
+const Point = require('../models/util/Point')
 
 /* Game の作成 */
 router.post('/', async function (req, res) {
@@ -57,6 +57,21 @@ router.post('/:id/flags', async function (req, res) {
     await gameRepository.update(game)
 
     res.status(201).json(point)
+  } else {
+    res.status(404).end()
+  }
+})
+
+router.delete('/:gameId/flags/:id', async function (req, res) {
+  const point = Point.parseId(req.params.id)
+  const game = await gameRepository.get(req.params.gameId)
+
+  if (game) {
+    const cell = game.field.cellAt(point)
+    if (cell.isFlag) {
+      cell.unflag()
+    }
+    res.status(204).end()
   } else {
     res.status(404).end()
   }
