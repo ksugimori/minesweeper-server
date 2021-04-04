@@ -27,7 +27,27 @@ function initGame (width, height, ...mines) {
   return game
 }
 
-describe('POST /api/games/{id}/flags', () => {
+describe('GET /api/games/:gameId/flags', () => {
+  test('フラグの一覧が取得できること', async () => {
+    // |1|*|2|
+    // |1|2|*|
+    const game = initGame(3, 2, Point.of(1, 0), Point.of(2, 1))
+    game.id = 999
+    game.open(0, 0)
+
+    game.flag(2, 0)
+    game.flag(1, 1)
+
+    gameRepository.get = jest.fn(() => game)
+
+    // API コール
+    const response = await request(app).get('/api/games/999/flags')
+
+    expect(response.body).toEqual([{ x: 1, y: 1 }, { x: 2, y: 0 }])
+  })
+})
+
+describe('POST /api/games/:gameId/flags', () => {
   test('フラグが追加できること', async () => {
     // |1|*|2|
     // |1|2|*|
@@ -63,4 +83,8 @@ describe('POST /api/games/{id}/flags', () => {
 
     expect(game.field.cellAt(point).isFlag).toBeTruthy()
   })
+})
+
+describe('POST /api/games/:gameId/flags/:id', () => {
+  test.todo('DELETE でフラグが外されること')
 })

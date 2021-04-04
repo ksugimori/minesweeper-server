@@ -31,6 +31,17 @@ router.get('/:id', async function (req, res) {
   }
 })
 
+router.get('/:id/flags', async function (req, res) {
+  const game = await gameRepository.get(req.params.id)
+
+  if (game) {
+    const flags = game.field.points(cell => cell.isFlag)
+    res.status(200).json(flags)
+  } else {
+    res.status(404).end()
+  }
+})
+
 router.post('/:id/flags', async function (req, res) {
   const game = await gameRepository.get(req.params.id)
 
