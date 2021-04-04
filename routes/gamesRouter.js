@@ -4,6 +4,7 @@ const Game = require('../models/Game')
 const Setting = require('../models/Setting')
 const gameRepository = require('../repositories/gameRepository')
 const GameView = require('../views/GameView')
+const exceptionHandler = require('../exceptions/exceptionHandler')
 
 /**
  * Game の作成
@@ -24,17 +25,19 @@ router.post('/', async function (req, res) {
 /**
  * Game の取得
  */
-router.get('/:id', async function (req, res) {
-  const game = await gameRepository.get(req.params.id)
-
-  if (game) {
+router.get('/:id', async function (req, res, next) {
+  try {
+    const game = await gameRepository.get(req.params.id)
     res.status(200).json(GameView.wrap(game))
-  } else {
-    res.status(404).end()
+  } catch (err) {
+    next(err)
   }
 })
 
 // ネストしたルーティングをセット
 require('./games/flagsRouter').route(router)
+
+// エラー処理
+router.use(exceptionHandler)
 
 module.exports = router
