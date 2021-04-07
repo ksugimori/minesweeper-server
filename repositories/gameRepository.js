@@ -42,7 +42,9 @@ const GameRepository = {
     try {
       const record = game.toRecord()
 
-      const sql = connection.format('UPDATE `games` SET flags = ? WHERE id = ?', [record.flags, record.id])
+      const id = record.id
+      delete record.id
+      const sql = connection.format('UPDATE `games` SET ? WHERE id = ?', [record, id])
       console.log(sql)
       // eslint-disable-next-line no-unused-vars
       const [results, fields] = await connection.query(sql)

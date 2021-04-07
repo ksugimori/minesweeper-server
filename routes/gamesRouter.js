@@ -36,6 +36,7 @@ router.get('/:id', async function (req, res, next) {
 
 // ネストしたルーティングをセット
 require('./games/flagsRouter').route(router)
+require('./games/opensRouter').route(router)
 
 // エラー処理
 router.use(exceptionHandler)
