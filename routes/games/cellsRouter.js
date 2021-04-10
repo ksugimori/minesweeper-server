@@ -1,5 +1,20 @@
 const gameRepository = require('../../lib/repositories/gameRepository')
 const Point = require('../../lib/models/util/Point')
+const BadRequestException = require('../../lib/exceptions/BadRequestException')
+
+/**
+ * セルIDをパースして Point 型のインスタンスを返す。
+ * @param {String} id セルID
+ * @returns point
+ */
+function parseCellId (id) {
+  try {
+    return Point.parseId(id)
+  } catch (err) {
+    console.error(`invalid ID: ${id}`)
+    throw new BadRequestException('IDが不正です')
+  }
+}
 
 /**
  * flags へのルーティングを設定する。
@@ -46,8 +61,10 @@ exports.route = function (router) {
    */
   router.delete('/:gameId/cells/flag/:id', async function (req, res, next) {
     try {
-      const point = Point.parseId(req.params.id)
-      const game = await gameRepository.get(req.params.gameId)
+      const { gameId, id } = req.params
+
+      const point = parseCellId(id)
+      const game = await gameRepository.get(gameId)
 
       const cell = game.field.cellAt(point)
       if (cell.isFlag) {

@@ -82,6 +82,12 @@ describe('DELETE /api/games/:gameId/cells/flag/:id', () => {
 
     expect(game.field.cellAt(Point.of(1, 0)).isFlag).toBeFalsy()
   })
+
+  test('不正なIDなら 400 エラーが返されること', async () => {
+    // y 座標が指定されてない
+    const response = await request(app).delete('/api/games/999/cells/flag/x100')
+    expect(response.statusCode).toBe(400)
+  })
 })
 
 describe('GET /api/games/:gameId/cells/open', () => {
