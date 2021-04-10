@@ -1,4 +1,4 @@
-const Cell = require('../../models/Cell.js')
+const Cell = require('../../lib/models/Cell.js')
 
 describe('Cell', () => {
   describe('#initialize', () => {

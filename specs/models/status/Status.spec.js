@@ -1,4 +1,4 @@
-const Status = require('../../../models/status/Status.js')
+const Status = require('../../../lib/models/status/Status.js')
 
 describe('Status', () => {
   test('INIT, PLAY, WIN, LOSE の４つのステータスが定義されていること', () => {

@@ -1,4 +1,4 @@
-const Setting = require('../../models/Setting.js')
+const Setting = require('../../lib/models/Setting.js')
 
 describe('Setting', () => {
   describe('#equals', () => {

@@ -1,7 +1,7 @@
-const Game = require('../../models/Game.js')
-const Point = require('../../models/util/Point.js')
-const random = require('../../models/util/random')
-const GameView = require('../../views/GameView.js')
+const Game = require('../../lib/models/Game.js')
+const Point = require('../../lib/models/util/Point.js')
+const random = require('../../lib/models/util/random')
+const GameView = require('../../lib/views/GameView.js')
 
 /**
  * Game オブジェクトを初期化する。

@@ -1,8 +1,8 @@
-const Game = require('../../models/Game.js')
-const Status = require('../../models/status/Status.js')
-const Point = require('../../models/util/Point.js')
-const StopWatch = require('../../models/util/StopWatch.js')
-jest.mock('../../models/util/StopWatch.js')
+const Game = require('../../lib/models/Game.js')
+const Status = require('../../lib/models/status/Status.js')
+const Point = require('../../lib/models/util/Point.js')
+const StopWatch = require('../../lib/models/util/StopWatch.js')
+jest.mock('../../lib/models/util/StopWatch.js')
 const mockUtils = require('../utils/mockUtils')
 
 /**
