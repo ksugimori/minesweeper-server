@@ -76,7 +76,7 @@ describe('DELETE /api/games/:gameId/cells/flag/:id', () => {
     gameRepository.get = jest.fn(() => game)
     gameRepository.update = jest.fn((x) => x)
 
-    const response = await request(app).delete('/api/games/999/cells/flag/1_0')
+    const response = await request(app).delete('/api/games/999/cells/flag/x1y0')
 
     expect(response.statusCode).toBe(204)
 
