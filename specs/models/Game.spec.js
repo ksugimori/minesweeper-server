@@ -2,8 +2,8 @@ const Game = require('../../models/Game.js')
 const Status = require('../../models/status/Status.js')
 const Point = require('../../models/util/Point.js')
 const StopWatch = require('../../models/util/StopWatch.js')
-const random = require('../../models/util/random')
 jest.mock('../../models/util/StopWatch.js')
+const mockUtils = require('../utils/mockUtils')
 
 /**
  * Game のフィールドから全行を取り出し、mapFunc を適用して返す。
@@ -12,27 +12,6 @@ jest.mock('../../models/util/StopWatch.js')
  */
 function extractRows (game, mapFunc) {
   return game.field.rows.map(row => row.map(mapFunc))
-}
-
-/**
- * Game オブジェクトを初期化する。
- * @param {Number} width 幅
- * @param {Number} height 高さ
- * @param {Array} mines 地雷の座標
- */
-function initGame (width, height, ...mines) {
-  const game = new Game()
-
-  const numMines = mines.length
-  game.setting.merge({ width, height, numMines })
-
-  // ランダムな地雷の配置はモックする
-  const spy = jest.spyOn(random, 'points')
-  spy.mockReturnValue(mines)
-
-  game.initialize()
-
-  return game
 }
 
 /**
@@ -139,7 +118,7 @@ describe('Game', () => {
 
   describe('#open', () => {
     test('指定したセルが数字の場合、そのセルの isOpen フラグが立つこと', () => {
-      const game = initGame(2, 2, Point.of(1, 1))
+      const game = mockUtils.initGame(2, 2, Point.of(1, 1))
 
       // テスト
       game.open(0, 0)
@@ -153,7 +132,7 @@ describe('Game', () => {
 
     test('指定したセルが空の場合、そのセルの周囲８セルに isOpen フラグが立つこと', () => {
       // 3行4列で、4列目に１つ地雷が埋まっている想定
-      const game = initGame(3, 4, Point.of(1, 3))
+      const game = mockUtils.initGame(3, 4, Point.of(1, 3))
 
       // この状態で (1, 1) を開くと、
       game.initialize()
@@ -170,7 +149,7 @@ describe('Game', () => {
 
     test('指定したセルが空の場合、そのセルの周囲８セルに isOpen フラグが立つが、isFlag=true となっているセルは変更されないこと', () => {
       // 3 行 5 列、4 行目に地雷がある
-      const game = initGame(3, 5, Point.of(0, 3), Point.of(1, 3), Point.of(2, 3))
+      const game = mockUtils.initGame(3, 5, Point.of(0, 3), Point.of(1, 3), Point.of(2, 3))
 
       game.open(0, 4) // はじめに１個開いたときに盤面が初期化されるのでクリアしない位置を開く
 
@@ -188,7 +167,7 @@ describe('Game', () => {
     })
 
     test('指定したセルに地雷がある場合、ステータスが LOSE になること', () => {
-      const game = initGame(2, 3, Point.of(0, 1), Point.of(1, 1))
+      const game = mockUtils.initGame(2, 3, Point.of(0, 1), Point.of(1, 1))
 
       game.open(0, 0)
 
@@ -201,7 +180,7 @@ describe('Game', () => {
 
     test('開いたセルの数だけ closedCount が減ること', () => {
       // 3行3列、2列目に地雷
-      const game = initGame(3, 3, Point.of(1, 0), Point.of(1, 1), Point.of(1, 2))
+      const game = mockUtils.initGame(3, 3, Point.of(1, 0), Point.of(1, 1), Point.of(1, 2))
 
       // この時点では全て閉じている
       expect(game.closedCount).toBe(9)
@@ -228,7 +207,7 @@ describe('Game', () => {
   describe('#flag', () => {
     test('選択したセルのフラグが立つこと', () => {
       // 3行3列、2列目に地雷
-      const game = initGame(3, 3, Point.of(1, 0), Point.of(1, 1), Point.of(1, 2))
+      const game = mockUtils.initGame(3, 3, Point.of(1, 0), Point.of(1, 1), Point.of(1, 2))
 
       game.open(0, 0)
 
@@ -247,7 +226,7 @@ describe('Game', () => {
     })
 
     test('ゲーム終了時はフラグが立てられないこと', () => {
-      const game = initGame(2, 2, Point.of(0, 0))
+      const game = mockUtils.initGame(2, 2, Point.of(0, 0))
 
       // 地雷以外を開く
       game.open(1, 0)
@@ -268,7 +247,7 @@ describe('Game', () => {
     test('地雷以外をすべて開いたら true を返すこと', () => {
       // |*| |
       // | |*|
-      const game = initGame(2, 2, Point.of(0, 0), Point.of(1, 1))
+      const game = mockUtils.initGame(2, 2, Point.of(0, 0), Point.of(1, 1))
 
       game.open(0, 1)
       expect(game.isWin()).toBeFalsy()
@@ -281,7 +260,7 @@ describe('Game', () => {
     test('最後に地雷を開いたら false を返すこと', () => {
       // |*| |
       // | |*|
-      const game = initGame(2, 2, Point.of(0, 0), Point.of(1, 1))
+      const game = mockUtils.initGame(2, 2, Point.of(0, 0), Point.of(1, 1))
 
       game.open(0, 1)
       expect(game.isWin()).toBeFalsy()
@@ -295,7 +274,7 @@ describe('Game', () => {
     test('地雷を開いたら true を返すこと', () => {
       // |*| |
       // | |*|
-      const game = initGame(2, 2, Point.of(0, 0), Point.of(1, 1))
+      const game = mockUtils.initGame(2, 2, Point.of(0, 0), Point.of(1, 1))
 
       game.open(0, 1)
       expect(game.isLose()).toBeFalsy()
@@ -309,7 +288,7 @@ describe('Game', () => {
     test('width, height が保存されること', () => {
       // |*| | |
       // | |*| |
-      const game = initGame(3, 2, Point.of(0, 0), Point.of(1, 1))
+      const game = mockUtils.initGame(3, 2, Point.of(0, 0), Point.of(1, 1))
 
       const data = game.toRecord()
 
@@ -320,7 +299,7 @@ describe('Game', () => {
     test('地雷、開いているセル、フラグの座標が保存されること', () => {
       // |*| | |
       // | |*| |
-      const game = initGame(3, 2, Point.of(0, 0), Point.of(1, 1))
+      const game = mockUtils.initGame(3, 2, Point.of(0, 0), Point.of(1, 1))
 
       game.open(1, 0)
       game.open(2, 0)
@@ -343,7 +322,7 @@ describe('Game', () => {
     test('ステータスが保存されること', () => {
       // |*| | |
       // | |*| |
-      const game = initGame(3, 2, Point.of(0, 0), Point.of(1, 1))
+      const game = mockUtils.initGame(3, 2, Point.of(0, 0), Point.of(1, 1))
 
       game.open(1, 0)
       game.open(2, 0)
