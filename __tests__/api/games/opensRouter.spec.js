@@ -1,38 +1,16 @@
 const request = require('supertest')
 const app = require('../../../app.js')
-const Game = require('../../../models/Game')
-const random = require('../../../models/util/random')
 const Point = require('../../../models/util/Point')
 const gameRepository = require('../../../repositories/gameRepository')
 jest.mock('../../../repositories/gameRepository')
-
-/**
- * Game オブジェクトを初期化する。
- * @param {Number} width 幅
- * @param {Number} height 高さ
- * @param {Array} mines 地雷の座標
- */
-function initGame (width, height, ...mines) {
-  const game = new Game()
-
-  const numMines = mines.length
-  game.setting.merge({ width, height, numMines })
-
-  // ランダムな地雷の配置はモックする
-  const spy = jest.spyOn(random, 'points')
-  spy.mockReturnValue(mines)
-
-  game.initialize()
-
-  return game
-}
+const mockUtils = require('../../utils/mockUtils')
 
 describe('GET /api/games/:gameId/opens', () => {
   test('開いているセルの一覧が取得できること', async () => {
     // |1|*|2|
     // |1|2|*|
     // |0|1|1|
-    const game = initGame(3, 3, Point.of(1, 0), Point.of(2, 1))
+    const game = mockUtils.initGame(3, 3, Point.of(1, 0), Point.of(2, 1))
     game.id = 999
 
     // 0 なので周囲４セルも開かれる
@@ -56,7 +34,7 @@ describe('POST /api/games/:gameId/opens', () => {
     // |1|*|2|
     // |1|2|*|
     // |0|1|1|
-    const game = initGame(3, 3, Point.of(1, 0), Point.of(2, 1))
+    const game = mockUtils.initGame(3, 3, Point.of(1, 0), Point.of(2, 1))
     game.id = 999
 
     gameRepository.get = jest.fn(() => game)
@@ -81,7 +59,7 @@ describe('POST /api/games/:gameId/opens', () => {
   test('すでに開かれたセルの場合は 200 が返却されること', async () => {
     // |1|*|2|
     // |1|2|*|
-    const game = initGame(3, 2, Point.of(1, 0), Point.of(2, 1))
+    const game = mockUtils.initGame(3, 2, Point.of(1, 0), Point.of(2, 1))
     game.id = 999
     game.open(0, 0)
     gameRepository.get = jest.fn(() => game)
@@ -105,7 +83,7 @@ describe('DELETE /api/games/:gameId/opens/:id', () => {
   test('405 が返ること', async () => {
     // |1|*|2|
     // |1|2|*|
-    const game = initGame(3, 2, Point.of(1, 0), Point.of(2, 1))
+    const game = mockUtils.initGame(3, 2, Point.of(1, 0), Point.of(2, 1))
     game.id = 999
     game.open(0, 0)
 
