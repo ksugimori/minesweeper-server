@@ -56,16 +56,16 @@ describe('Point', () => {
   })
 
   describe('#id', () => {
-    test('x, y 座標をアンダースコアでつないだ文字列であること', () => {
+    test('(1, 2) のとき x1y2 となること', () => {
       const p = Point.of(1, 2)
 
-      expect(p.id).toBe('1_2')
+      expect(p.id).toBe('x1y2')
     })
   })
 
   describe('#parseId', () => {
     test('id から元の Point を復元できること', () => {
-      const p = Point.parseId('12_34')
+      const p = Point.parseId('x12y34')
 
       expect(p.x).toBe(12)
       expect(p.y).toBe(34)
