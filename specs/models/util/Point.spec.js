@@ -1,4 +1,4 @@
-const Point = require('../../../models/util/Point.js')
+const Point = require('../../../lib/models/util/Point.js')
 
 describe('Point', () => {
   describe('#equals', () => {

@@ -1,4 +1,4 @@
-const gameRepository = require('../../repositories/gameRepository')
+const gameRepository = require('../../lib/repositories/gameRepository')
 
 /**
  * status へのルーティングを設定する。

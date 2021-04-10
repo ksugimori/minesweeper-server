@@ -1,9 +1,9 @@
 const request = require('supertest')
 const app = require('../../app.js')
-const Game = require('../../models/Game')
-const DataNotFoundException = require('../../exceptions/DataNotFoundException')
-const gameRepository = require('../../repositories/gameRepository')
-jest.mock('../../repositories/gameRepository')
+const Game = require('../../lib/models/Game')
+const DataNotFoundException = require('../../lib/exceptions/DataNotFoundException')
+const gameRepository = require('../../lib/repositories/gameRepository')
+jest.mock('../../lib/repositories/gameRepository')
 
 describe('POST /api/games', () => {
   test('Game オブジェクトが返されること', async () => {

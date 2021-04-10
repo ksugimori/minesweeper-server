@@ -1,5 +1,5 @@
-const Point = require('../../models/util/Point.js')
-const Field = require('../../models/Field.js')
+const Point = require('../../lib/models/util/Point.js')
+const Field = require('../../lib/models/Field.js')
 
 describe('Field', () => {
   describe('#pointsArround', () => {

@@ -1,5 +1,5 @@
-const random = require('../../../models/util/random.js')
-const Point = require('../../../models/util/Point.js')
+const random = require('../../../lib/models/util/random.js')
+const Point = require('../../../lib/models/util/Point.js')
 
 describe('random', () => {
   describe('#points', () => {

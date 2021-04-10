@@ -1,10 +1,10 @@
 const express = require('express')
 const router = express.Router()
-const Game = require('../models/Game')
-const Setting = require('../models/Setting')
-const gameRepository = require('../repositories/gameRepository')
-const GameView = require('../views/GameView')
-const exceptionHandler = require('../exceptions/exceptionHandler')
+const Game = require('../lib/models/Game')
+const Setting = require('../lib/models/Setting')
+const gameRepository = require('../lib/repositories/gameRepository')
+const GameView = require('../lib/views/GameView')
+const exceptionHandler = require('../lib/exceptions/exceptionHandler')
 
 /**
  * Game の作成

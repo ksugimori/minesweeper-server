@@ -1,6 +1,6 @@
 node_modules
 npm-debug.log
-__tests__
-database/ddl
-database/docker-compose.yml
-database/mysql_volume
+specs
+ddl
+docker/docker-compose.yml
+docker/mysql_volume

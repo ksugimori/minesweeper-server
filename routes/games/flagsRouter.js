@@ -1,5 +1,5 @@
-const gameRepository = require('../../repositories/gameRepository')
-const Point = require('../../models/util/Point')
+const gameRepository = require('../../lib/repositories/gameRepository')
+const Point = require('../../lib/models/util/Point')
 
 /**
  * flags へのルーティングを設定する。

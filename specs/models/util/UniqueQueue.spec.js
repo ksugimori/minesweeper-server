@@ -1,5 +1,5 @@
-const Point = require('../../../models/util/Point.js')
-const UniqueQueue = require('../../../models/util/UniqueQueue.js')
+const Point = require('../../../lib/models/util/Point.js')
+const UniqueQueue = require('../../../lib/models/util/UniqueQueue.js')
 
 describe('UniqueQueue', () => {
   test('キューに追加した Point が順番に取得できること', () => {

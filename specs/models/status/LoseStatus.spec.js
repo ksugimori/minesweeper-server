@@ -1,7 +1,7 @@
-const Status = require('../../../models/status/Status.js')
-const Point = require('../../../models/util/Point.js')
-const Game = require('../../../models/Game.js')
-jest.mock('../../../models/Game.js')
+const Status = require('../../../lib/models/status/Status.js')
+const Point = require('../../../lib/models/util/Point.js')
+const Game = require('../../../lib/models/Game.js')
+jest.mock('../../../lib/models/Game.js')
 
 beforeEach(() => {
   Game.mockClear()

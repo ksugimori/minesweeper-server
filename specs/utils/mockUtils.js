@@ -1,5 +1,5 @@
-const Game = require('../../models/Game')
-const random = require('../../models/util/random')
+const Game = require('../../lib/models/Game')
+const random = require('../../lib/models/util/random')
 
 /**
  * Game オブジェクトを初期化する。
