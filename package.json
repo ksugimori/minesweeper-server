@@ -24,6 +24,6 @@
     "supertest": "^6.1.3"
   },
   "jest": {
-    "testRegex": "(/__tests__/.*)\\.spec\\.js$"
+    "testRegex": "(/specs/.*)\\.spec\\.js$"
   }
 }
