@@ -4,7 +4,7 @@ services:
     image: ksugimori/minesweeper-server
     container_name: ms-api
     ports:
-      - 80:3000
+      - 3000:3000
     environment:
       MS_DB_HOST: ms-db
       MS_DB_USER: ms-user
