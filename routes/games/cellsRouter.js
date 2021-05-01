@@ -1,4 +1,10 @@
 const gameRepository = require('../../lib/repositories/gameRepository')
+const CellView = require('../../lib/views/CellView')
+
+function extractOpenCells (game) {
+  return game.field.points(cell => cell.isOpen)
+    .map(p => new CellView(p, game.field.cellAt(p)))
+}
 
 /**
  * open-cells へのルーティングを設定する。
@@ -11,8 +17,10 @@ exports.route = function (router) {
   router.get('/:gameId/open-cells', async function (req, res, next) {
     try {
       const game = await gameRepository.get(req.params.gameId)
-      const openCells = game.field.points(cell => cell.isOpen)
-      res.status(200).json(openCells)
+
+      const result = extractOpenCells(game)
+
+      res.status(200).json(result)
     } catch (err) {
       next(err)
     }
@@ -27,7 +35,7 @@ exports.route = function (router) {
       const point = { x: req.body.x, y: req.body.y }
 
       if (game.field.cellAt(point).isOpen) {
-        const openCells = game.field.points(cell => cell.isOpen)
+        const openCells = extractOpenCells(game)
         res.status(200).json(openCells)
         return
       }
@@ -35,7 +43,7 @@ exports.route = function (router) {
       game.open(point.x, point.y)
       await gameRepository.update(game)
 
-      const openCells = game.field.points(cell => cell.isOpen)
+      const openCells = extractOpenCells(game)
       res.status(201).json(openCells)
     } catch (err) {
       next(err)
