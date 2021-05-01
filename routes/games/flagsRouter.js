@@ -24,7 +24,7 @@ exports.route = function (router) {
   /**
    * フラグ一覧の取得
    */
-  router.get('/:gameId/cells/flag', async function (req, res, next) {
+  router.get('/:gameId/flags', async function (req, res, next) {
     try {
       const game = await gameRepository.get(req.params.gameId)
       const flags = game.field.points(cell => cell.isFlag)
@@ -37,7 +37,7 @@ exports.route = function (router) {
   /**
    * フラグを作成する
    */
-  router.post('/:gameId/cells/flag', async function (req, res, next) {
+  router.post('/:gameId/flags', async function (req, res, next) {
     try {
       const game = await gameRepository.get(req.params.gameId)
       const point = { x: req.body.x, y: req.body.y }
@@ -59,7 +59,7 @@ exports.route = function (router) {
   /**
    * フラグを削除する
    */
-  router.delete('/:gameId/cells/flag/:id', async function (req, res, next) {
+  router.delete('/:gameId/flags/:id', async function (req, res, next) {
     try {
       const { gameId, id } = req.params
 
