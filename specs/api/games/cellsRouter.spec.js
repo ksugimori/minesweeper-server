@@ -5,7 +5,7 @@ const gameRepository = require('../../../lib/repositories/gameRepository')
 jest.mock('../../../lib/repositories/gameRepository')
 const mockUtils = require('../../utils/mockUtils')
 
-describe('GET /api/games/:gameId/cells/open', () => {
+describe('GET /api/games/:gameId/open-cells', () => {
   test('開いているセルの一覧が取得できること', async () => {
     // |1|*|2|
     // |1|2|*|
@@ -19,7 +19,7 @@ describe('GET /api/games/:gameId/cells/open', () => {
     gameRepository.get = jest.fn(() => game)
 
     // API コール
-    const response = await request(app).get('/api/games/999/cells/open')
+    const response = await request(app).get('/api/games/999/open-cells')
 
     expect(response.statusCode).toBe(200)
     expect(response.body.map(p => `${p.x}_${p.y}`).sort()).toEqual([
@@ -29,7 +29,7 @@ describe('GET /api/games/:gameId/cells/open', () => {
   })
 })
 
-describe('POST /api/games/:gameId/cells/open', () => {
+describe('POST /api/games/:gameId/open-cells', () => {
   test('セルが開けること', async () => {
     // |1|*|2|
     // |1|2|*|
@@ -44,7 +44,7 @@ describe('POST /api/games/:gameId/cells/open', () => {
     // テスト
     //
     const point = { x: 0, y: 2 }
-    const response = await request(app).post('/api/games/999/cells/open').send(point)
+    const response = await request(app).post('/api/games/999/open-cells').send(point)
 
     //
     // 検証
@@ -69,7 +69,7 @@ describe('POST /api/games/:gameId/cells/open', () => {
     // テスト
     //
     const point = { x: 0, y: 0 }
-    const response = await request(app).post('/api/games/999/cells/open').send(point)
+    const response = await request(app).post('/api/games/999/open-cells').send(point)
 
     //
     // 検証
@@ -79,7 +79,7 @@ describe('POST /api/games/:gameId/cells/open', () => {
   })
 })
 
-describe('DELETE /api/games/:gameId/cells/open/:id', () => {
+describe('DELETE /api/games/:gameId/open-cells/:id', () => {
   test('405 が返ること', async () => {
     // |1|*|2|
     // |1|2|*|
@@ -90,7 +90,7 @@ describe('DELETE /api/games/:gameId/cells/open/:id', () => {
     gameRepository.get = jest.fn(() => game)
     gameRepository.update = jest.fn((x) => x)
 
-    const response = await request(app).delete('/api/games/999/cells/open/0_0')
+    const response = await request(app).delete('/api/games/999/open-cells/0_0')
 
     expect(response.statusCode).toBe(405)
   })

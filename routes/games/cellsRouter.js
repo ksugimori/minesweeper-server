@@ -8,7 +8,7 @@ exports.route = function (router) {
   /**
    * 開いたセル一覧の取得
    */
-  router.get('/:gameId/cells/open', async function (req, res, next) {
+  router.get('/:gameId/open-cells', async function (req, res, next) {
     try {
       const game = await gameRepository.get(req.params.gameId)
       const openCells = game.field.points(cell => cell.isOpen)
@@ -21,7 +21,7 @@ exports.route = function (router) {
   /**
    * セルを開く（開いたセルを作る）
    */
-  router.post('/:gameId/cells/open', async function (req, res, next) {
+  router.post('/:gameId/open-cells', async function (req, res, next) {
     try {
       const game = await gameRepository.get(req.params.gameId)
       const point = { x: req.body.x, y: req.body.y }
@@ -45,7 +45,7 @@ exports.route = function (router) {
   /**
    * 開いたセルを閉じる
    */
-  router.delete('/:gameId/cells/open/:id', async function (req, res, next) {
+  router.delete('/:gameId/open-cells/:id', async function (req, res, next) {
     res.status(405).end()
   })
 }
