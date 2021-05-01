@@ -26,6 +26,10 @@ describe('GET /api/games/:gameId/open-cells', () => {
       '0_1', '1_1',
       '0_2', '1_2'
     ].sort())
+    expect(response.body.map(p => p.count).sort()).toEqual([
+      1, 2,
+      0, 1
+    ].sort())
   })
 })
 
@@ -53,6 +57,10 @@ describe('POST /api/games/:gameId/open-cells', () => {
     expect(response.body.map(p => `${p.x}_${p.y}`).sort()).toEqual([
       '0_1', '1_1',
       '0_2', '1_2'
+    ].sort())
+    expect(response.body.map(p => p.count).sort()).toEqual([
+      1, 2,
+      0, 1
     ].sort())
   })
 
