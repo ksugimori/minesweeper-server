@@ -61,8 +61,9 @@ describe('gameRepository', () => {
   describe('#restore', () => {
     test('復元できること', () => {
       const record = {
-        width: 3,
-        height: 2,
+        width: 4,
+        height: 3,
+        numMines: 2,
         status: 'PLAY',
         mines: [{ x: 0, y: 0 }, { x: 1, y: 1 }],
         opens: [{ x: 1, y: 0 }, { x: 2, y: 0 }],
@@ -72,28 +73,32 @@ describe('gameRepository', () => {
 
       const game = gameRepository.restore(record)
 
-      expect(game.setting.width).toBe(3)
-      expect(game.setting.height).toBe(2)
+      expect(game.setting.width).toBe(4)
+      expect(game.setting.height).toBe(3)
       expect(game.setting.numMines).toBe(2)
       expect(game.status).toBe(Status.PLAY)
 
       // 地雷
-      expect(game.field.rows[0].map(e => e.isMine)).toEqual([true, false, false])
-      expect(game.field.rows[1].map(e => e.isMine)).toEqual([false, true, false])
+      expect(game.field.rows[0].map(e => e.isMine)).toEqual([true, false, false, false])
+      expect(game.field.rows[1].map(e => e.isMine)).toEqual([false, true, false, false])
+      expect(game.field.rows[2].map(e => e.isMine)).toEqual([false, false, false, false])
 
       // 開いてるセル
-      expect(game.field.rows[0].map(e => e.isOpen)).toEqual([false, true, true])
-      expect(game.field.rows[1].map(e => e.isOpen)).toEqual([false, false, false])
+      expect(game.field.rows[0].map(e => e.isOpen)).toEqual([false, true, true, false])
+      expect(game.field.rows[1].map(e => e.isOpen)).toEqual([false, false, false, false])
+      expect(game.field.rows[2].map(e => e.isOpen)).toEqual([false, false, false, false])
 
       // フラグ
-      expect(game.field.rows[0].map(e => e.isFlag)).toEqual([false, false, false])
-      expect(game.field.rows[1].map(e => e.isFlag)).toEqual([false, true, false])
+      expect(game.field.rows[0].map(e => e.isFlag)).toEqual([false, false, false, false])
+      expect(game.field.rows[1].map(e => e.isFlag)).toEqual([false, true, false, false])
+      expect(game.field.rows[2].map(e => e.isFlag)).toEqual([false, false, false, false])
     })
 
     test('復元して続きがプレイできること', () => {
       const game = gameRepository.restore({
         width: 2,
         height: 2,
+        numMines: 2,
         mines: [{ x: 0, y: 0 }, { x: 1, y: 1 }],
         opens: [{ x: 1, y: 0 }],
         flags: [],
