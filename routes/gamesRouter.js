@@ -34,6 +34,7 @@ router.get('/:id', async function (req, res, next) {
 
 // ネストしたルーティングをセット
 require('./games/cellsRouter').route(router)
+require('./games/flagsRouter').route(router)
 require('./games/statusRouter').route(router)
 
 // エラー処理
