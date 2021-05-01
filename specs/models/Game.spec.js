@@ -290,10 +290,10 @@ describe('Game', () => {
       // | |*| |
       const game = mockUtils.initGame(3, 2, Point.of(0, 0), Point.of(1, 1))
 
-      const data = game.toRecord()
+      const record = game.toRecord()
 
-      expect(data.width).toBe(3)
-      expect(data.height).toBe(2)
+      expect(record.width).toBe(3)
+      expect(record.height).toBe(2)
     })
 
     test('地雷、開いているセル、フラグの座標が保存されること', () => {
