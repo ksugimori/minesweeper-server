@@ -13,6 +13,8 @@ router.post('/', async function (req, res) {
   const game = new Game()
   game.setting = req.body.setting || Setting.EASY
 
+  game.initialize()
+
   const created = await gameRepository.create(game)
 
   res.status(201).json(GameView.wrap(created))
