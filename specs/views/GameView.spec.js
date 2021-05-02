@@ -98,24 +98,7 @@ describe('GameView', () => {
       ])
     })
 
-    test('セル一覧の中でオープンしたセルには count がセットされていること', () => {
-      // |*|2|1|
-      // |2|*|1|
-      const game = initGame(3, 2, Point.of(0, 0), Point.of(1, 1))
-
-      const view = GameView.wrap(game)
-      game.open(1, 0)
-      game.open(2, 0)
-
-      const json = JSON.stringify(view)
-      const result = JSON.parse(json).cells.map(arr => arr.map(e => e.count))
-      expect(result).toEqual([
-        [0, 2, 1],
-        [0, 0, 0]
-      ])
-    })
-
-    test('プレイ中は isMine が全て false, 終了後は地雷のある場所に true がセットされていること', () => {
+    test('プレイ中は mines が空, 終了後はセットされていること', () => {
       // |*|2|1|
       // |2|*|1|
       const game = initGame(3, 2, Point.of(0, 0), Point.of(1, 1))
@@ -123,23 +106,19 @@ describe('GameView', () => {
       const view = GameView.wrap(game)
       game.open(0, 1)
 
-      // この時点ではすべて false
+      // この時点では空配列
       const json1 = JSON.stringify(view)
-      const result1 = JSON.parse(json1).cells.map(arr => arr.map(e => e.isMine))
-      expect(result1).toEqual([
-        [false, false, false],
-        [false, false, false]
-      ])
+      const result1 = JSON.parse(json1).mines.sort()
+      expect(result1).toEqual([])
 
       // 地雷を開いてゲームオーバーになると全て開く
       game.open(0, 0)
 
       const json2 = JSON.stringify(view)
-      const result2 = JSON.parse(json2).cells.map(arr => arr.map(e => e.isMine))
+      const result2 = JSON.parse(json2).mines.sort()
       expect(result2).toEqual([
-        [true, false, false],
-        [false, true, false]
-      ])
+        { x: 0, y: 0 }, { x: 1, y: 1 }
+      ].sort())
     })
   })
 })
