@@ -41,10 +41,15 @@ exports.route = function (router) {
       }
 
       game.open(point.x, point.y)
-      await gameRepository.update(game)
+      const updated = await gameRepository.update(game)
 
-      const openCells = extractOpenCells(game)
-      res.status(201).json(openCells)
+      if (updated.status.isEnd) {
+        const gamePath = `/api/games/${updated.id}`
+        res.status(303).location(gamePath).end()
+      } else {
+        const openCells = extractOpenCells(updated)
+        res.status(201).json(openCells)
+      }
     } catch (err) {
       next(err)
     }
