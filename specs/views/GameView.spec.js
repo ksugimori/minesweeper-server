@@ -31,9 +31,11 @@ describe('GameView', () => {
 
       const view = GameView.wrap(game)
 
-      expect(view.toJSON().width).toBe(2)
-      expect(view.toJSON().height).toBe(3)
-      expect(view.toJSON().numMines).toBe(4)
+      const json = JSON.stringify(view)
+      const result = JSON.parse(json)
+      expect(result.width).toBe(2)
+      expect(result.height).toBe(3)
+      expect(result.numMines).toBe(4)
     })
 
     test('status が文字列として反映されること', () => {
@@ -41,11 +43,15 @@ describe('GameView', () => {
 
       // この時点では INIT
       const view = GameView.wrap(game)
-      expect(view.toJSON().status).toBe('INIT')
+      let json = JSON.stringify(view)
+      let result = JSON.parse(json)
+      expect(result.status).toBe('INIT')
 
       // ひとつでも開けば PLAY
       game.open(1, 0)
-      expect(view.toJSON().status).toBe('PLAY')
+      json = JSON.stringify(view)
+      result = JSON.parse(json)
+      expect(result.status).toBe('PLAY')
     })
 
     test('startTime がISO8601フォーマットの文字列として反映されること', () => {
@@ -54,25 +60,29 @@ describe('GameView', () => {
       const view = GameView.wrap(game)
       game.open(1, 0)
 
-      expect(view.toJSON().startTime).toMatch(/\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}.\d{3}Z/)
+      const json = JSON.stringify(view)
+      const result = JSON.parse(json)
+      expect(result.startTime).toMatch(/\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}.\d{3}Z/)
     })
 
-    test('セル一覧に isOpen がセットされていること', () => {
+    test('開いているセル一覧が取得できること', () => {
       // |*|2|1|
       // |2|*|1|
       const game = initGame(3, 2, Point.of(0, 0), Point.of(1, 1))
 
       const view = GameView.wrap(game)
       game.open(0, 1)
+      game.open(2, 0)
 
-      const result = view.toJSON().cells.map(arr => arr.map(e => e.isOpen))
+      const json = JSON.stringify(view)
+      const result = JSON.parse(json).openCells.sort()
       expect(result).toEqual([
-        [false, false, false],
-        [true, false, false]
-      ])
+        { x: 0, y: 1, count: 2 },
+        { x: 2, y: 0, count: 1 }
+      ].sort())
     })
 
-    test('セル一覧に isFlag がセットされていること', () => {
+    test('フラグ一覧がセットされていること', () => {
       // |*|2|1|
       // |2|*|1|
       const game = initGame(3, 2, Point.of(0, 0), Point.of(1, 1))
@@ -81,10 +91,10 @@ describe('GameView', () => {
       game.open(0, 1)
       game.flag(0, 0)
 
-      const result = view.toJSON().cells.map(arr => arr.map(e => e.isFlag))
-      expect(result).toEqual([
-        [true, false, false],
-        [false, false, false]
+      const json = JSON.stringify(view)
+      const result = JSON.parse(json)
+      expect(result.flags.sort()).toEqual([
+        { x: 0, y: 0 }
       ])
     })
 
@@ -97,7 +107,8 @@ describe('GameView', () => {
       game.open(1, 0)
       game.open(2, 0)
 
-      const result = view.toJSON().cells.map(arr => arr.map(e => e.count))
+      const json = JSON.stringify(view)
+      const result = JSON.parse(json).cells.map(arr => arr.map(e => e.count))
       expect(result).toEqual([
         [0, 2, 1],
         [0, 0, 0]
@@ -113,7 +124,8 @@ describe('GameView', () => {
       game.open(0, 1)
 
       // この時点ではすべて false
-      const result1 = view.toJSON().cells.map(arr => arr.map(e => e.isMine))
+      const json1 = JSON.stringify(view)
+      const result1 = JSON.parse(json1).cells.map(arr => arr.map(e => e.isMine))
       expect(result1).toEqual([
         [false, false, false],
         [false, false, false]
@@ -122,7 +134,8 @@ describe('GameView', () => {
       // 地雷を開いてゲームオーバーになると全て開く
       game.open(0, 0)
 
-      const result2 = view.toJSON().cells.map(arr => arr.map(e => e.isMine))
+      const json2 = JSON.stringify(view)
+      const result2 = JSON.parse(json2).cells.map(arr => arr.map(e => e.isMine))
       expect(result2).toEqual([
         [true, false, false],
         [false, true, false]
