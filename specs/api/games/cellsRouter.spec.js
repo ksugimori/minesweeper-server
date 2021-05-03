@@ -64,28 +64,6 @@ describe('POST /api/games/:gameId/open-cells', () => {
     ].sort())
   })
 
-  test('すでに開かれたセルの場合は 200 が返却されること', async () => {
-    // |1|*|2|
-    // |1|2|*|
-    const game = mockUtils.initGame(3, 2, Point.of(1, 0), Point.of(2, 1))
-    game.id = 999
-    game.open(0, 0)
-    gameRepository.get = jest.fn(() => game)
-    gameRepository.update = jest.fn((x) => x)
-
-    //
-    // テスト
-    //
-    const point = { x: 0, y: 0 }
-    const response = await request(app).post('/api/games/999/open-cells').send(point)
-
-    //
-    // 検証
-    //
-    expect(response.statusCode).toBe(200)
-    expect(response.body.map(p => `${p.x}_${p.y}`).sort()).toEqual(['0_0'].sort())
-  })
-
   test('ゲームが終了した場合は 303 でリダイレクトされること', async () => {
     // |1|*|2|
     // |1|2|*|
