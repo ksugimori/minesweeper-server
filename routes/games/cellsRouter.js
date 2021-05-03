@@ -34,12 +34,6 @@ exports.route = function (router) {
       const game = await gameRepository.get(req.params.gameId)
       const point = { x: req.body.x, y: req.body.y }
 
-      if (game.field.cellAt(point).isOpen) {
-        const openCells = extractOpenCells(game)
-        res.status(200).json(openCells)
-        return
-      }
-
       game.open(point.x, point.y)
       const updated = await gameRepository.update(game)
 
