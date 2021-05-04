@@ -3,7 +3,8 @@ const CellView = require('../../lib/views/CellView')
 
 function extractOpenCells (game) {
   return game.field.points(cell => cell.isOpen)
-    .map(p => new CellView(p, game.field.cellAt(p)))
+    .map(p => game.field.cellAt(p))
+    .map(cell => new CellView(cell))
 }
 
 /**

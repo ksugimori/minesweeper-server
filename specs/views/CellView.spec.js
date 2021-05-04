@@ -6,9 +6,10 @@ describe('CellView', () => {
   describe('#toJSON', () => {
     test('x, y, count が反映されること', () => {
       const point = Point.of(1, 2)
-      const cell = new Cell({ count: 8 })
+      const cell = new Cell(point)
+      cell.count = 8
 
-      const view = new CellView(point, cell)
+      const view = new CellView(cell)
       expect(view.toJSON().x).toBe(1)
       expect(view.toJSON().y).toBe(2)
       expect(view.toJSON().count).toBe(8)
