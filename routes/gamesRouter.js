@@ -1,17 +1,28 @@
 const express = require('express')
 const router = express.Router()
 const Game = require('../lib/models/Game')
-const Setting = require('../lib/models/Setting')
 const gameRepository = require('../lib/repositories/gameRepository')
 const GameView = require('../lib/views/GameView')
 const exceptionHandler = require('../lib/exceptions/exceptionHandler')
 
+function validateRequest (req, res, next) {
+  const game = req.body
+
+  if (game.width && game.height && game.numMines) {
+    next()
+  } else {
+    console.warn('リクエストが不正です。 request = ', req.body)
+    res.status(400).end()
+  }
+}
+
 /**
  * Game の作成
  */
-router.post('/', async function (req, res) {
+router.post('/', validateRequest, async function (req, res) {
   const game = new Game()
-  game.setting = req.body.setting || Setting.EASY
+
+  game.setting.merge(req.body)
 
   game.initialize()
 
