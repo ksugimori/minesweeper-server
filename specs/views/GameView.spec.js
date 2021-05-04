@@ -6,21 +6,21 @@ const GameView = require('../../lib/views/GameView.js')
 /**
  * 座標を比較する。
  *
- * x, y, count の順に比較する。
+ * y, x, count の順に比較する。
  * @param {Object} p1 座標
  * @param {Object} p2 座標
  * @returns
  */
-function comparePoint (p1, p2) {
-  if (p1.x < p2.x) {
-    return -1
-  } else if (p1.x > p2.x) {
-    return 1
-  }
-
+function byYX (p1, p2) {
   if (p1.y < p2.y) {
     return -1
   } else if (p1.y > p2.y) {
+    return 1
+  }
+
+  if (p1.x < p2.x) {
+    return -1
+  } else if (p1.x > p2.x) {
     return 1
   }
 
@@ -89,84 +89,31 @@ describe('GameView', () => {
       expect(result.startTime).toMatch(/\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}.\d{3}Z/)
     })
 
-    test('開いているセル一覧が取得できること', () => {
+    test('cells にすべてのセルがセットされていること', () => {
       // |*|2|1|
       // |2|*|1|
       const game = initGame(3, 2, Point.of(0, 0), Point.of(1, 1))
 
       const view = GameView.wrap(game)
       game.open(0, 1)
-      game.open(2, 0)
 
-      const json = JSON.stringify(view)
-      const result = JSON.parse(json).openCells.sort()
-      expect(result).toEqual([
-        { x: 0, y: 1, count: 2 },
-        { x: 2, y: 0, count: 1 }
-      ].sort())
-    })
-
-    test('フラグ一覧がセットされていること', () => {
-      // |*|2|1|
-      // |2|*|1|
-      const game = initGame(3, 2, Point.of(0, 0), Point.of(1, 1))
-
-      const view = GameView.wrap(game)
-      game.open(0, 1)
-      game.flag(0, 0)
-
-      const json = JSON.stringify(view)
-      const result = JSON.parse(json)
-      expect(result.flags.sort()).toEqual([
-        { x: 0, y: 0 }
+      // この時点では開いたセル意外は count = 0
+      const json1 = JSON.stringify(view)
+      const result1 = JSON.parse(json1).cells.sort(byYX).map(c => c.count)
+      expect(result1).toEqual([
+        0, 0, 0,
+        2, 0, 0
       ])
-    })
 
-    test('プレイ中は mines が空, 終了後はセットされていること', () => {
-      // |*|2|1|
-      // |2|*|1|
-      const game = initGame(3, 2, Point.of(0, 0), Point.of(1, 1))
-
-      const view = GameView.wrap(game)
-      game.open(0, 1)
-
-      // この時点では空配列
-      const json1 = JSON.stringify(view)
-      const result1 = JSON.parse(json1).mines.sort(comparePoint)
-      expect(result1).toEqual([])
-
-      // 地雷を開いてゲームオーバーになるとセットされる
+      // 地雷を開いてゲームオーバーになると全てにセットされる
       game.open(0, 0)
 
       const json2 = JSON.stringify(view)
-      const result2 = JSON.parse(json2).mines.sort(comparePoint)
+      const result2 = JSON.parse(json2).cells.sort(byYX).map(c => c.count)
       expect(result2).toEqual([
-        { x: 0, y: 0 }, { x: 1, y: 1 }
-      ].sort())
-    })
-
-    test('ゲーム終了後はすべてのセルが openCells にセットされていること', () => {
-      // |*|2|1|
-      // |2|*|1|
-      const game = initGame(3, 2, Point.of(0, 0), Point.of(1, 1))
-
-      const view = GameView.wrap(game)
-      game.open(0, 1)
-
-      // この時点では開いたセルのみ
-      const json1 = JSON.stringify(view)
-      const result1 = JSON.parse(json1).openCells.sort(comparePoint)
-      expect(result1).toEqual([{ x: 0, y: 1, count: 2 }])
-
-      // 地雷を開いてゲームオーバーになると全て開く
-      game.open(0, 0)
-
-      const json2 = JSON.stringify(view)
-      const result2 = JSON.parse(json2).openCells.sort(comparePoint)
-      expect(result2).toEqual([
-        { x: 0, y: 0, count: 0 }, { x: 1, y: 0, count: 2 }, { x: 2, y: 0, count: 1 },
-        { x: 0, y: 1, count: 2 }, { x: 1, y: 1, count: 0 }, { x: 2, y: 1, count: 1 }
-      ].sort(comparePoint))
+        0, 2, 1,
+        2, 0, 1
+      ].sort(byYX))
     })
   })
 })
