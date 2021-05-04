@@ -2,6 +2,24 @@ const Cell = require('../../lib/models/Cell.js')
 const Point = require('../../lib/models/util/Point.js')
 
 describe('Cell', () => {
+  describe('#id', () => {
+    test('(1, 2) のとき x1y2 となること', () => {
+      const p = Point.of(1, 2)
+      const cell = new Cell(p)
+
+      expect(cell.id).toBe('x1y2')
+    })
+  })
+
+  describe('#parseId', () => {
+    test('id から元の Cell を復元できること', () => {
+      const cell = Cell.parseId('x12y34')
+
+      expect(cell.x).toBe(12)
+      expect(cell.y).toBe(34)
+    })
+  })
+
   describe('#initialize', () => {
     test('初期状態では count=0, isOpen=false, isMine=false, isFlag=false であること', () => {
       const cell = new Cell(Point.of(0, 0))
