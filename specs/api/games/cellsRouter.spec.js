@@ -63,30 +63,6 @@ describe('POST /api/games/:gameId/open-cells', () => {
       0, 1
     ].sort())
   })
-
-  test('ゲームが終了した場合は 303 でリダイレクトされること', async () => {
-    // |1|*|2|
-    // |1|2|*|
-    // |0|1|1|
-    const game = mockUtils.initGame(3, 3, Point.of(1, 0), Point.of(2, 1))
-    game.id = 999
-
-    gameRepository.get = jest.fn(() => game)
-    gameRepository.update = jest.fn((x) => x)
-
-    //
-    // テスト
-    //
-    const response1 = await request(app).post('/api/games/999/open-cells').send({ x: 0, y: 2 })
-    expect(response1.statusCode).toBe(201)
-    const response = await request(app).post('/api/games/999/open-cells').send({ x: 1, y: 0 })
-
-    //
-    // 検証
-    //
-    expect(response.statusCode).toBe(303)
-    expect(response.headers.location).toBe('/api/games/999')
-  })
 })
 
 describe('DELETE /api/games/:gameId/open-cells/:id', () => {
