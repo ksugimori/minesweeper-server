@@ -4,6 +4,30 @@ const random = require('../../lib/models/util/random')
 const GameView = require('../../lib/views/GameView.js')
 
 /**
+ * 座標を比較する。
+ *
+ * x, y, count の順に比較する。
+ * @param {Object} p1 座標
+ * @param {Object} p2 座標
+ * @returns
+ */
+function comparePoint (p1, p2) {
+  if (p1.x < p2.x) {
+    return -1
+  } else if (p1.x > p2.x) {
+    return 1
+  }
+
+  if (p1.y < p2.y) {
+    return -1
+  } else if (p1.y > p2.y) {
+    return 1
+  }
+
+  return p1.count - p2.count
+}
+
+/**
  * Game オブジェクトを初期化する。
  * @param {Number} width 幅
  * @param {Number} height 高さ
@@ -108,17 +132,41 @@ describe('GameView', () => {
 
       // この時点では空配列
       const json1 = JSON.stringify(view)
-      const result1 = JSON.parse(json1).mines.sort()
+      const result1 = JSON.parse(json1).mines.sort(comparePoint)
       expect(result1).toEqual([])
+
+      // 地雷を開いてゲームオーバーになるとセットされる
+      game.open(0, 0)
+
+      const json2 = JSON.stringify(view)
+      const result2 = JSON.parse(json2).mines.sort(comparePoint)
+      expect(result2).toEqual([
+        { x: 0, y: 0 }, { x: 1, y: 1 }
+      ].sort())
+    })
+
+    test('ゲーム終了後はすべてのセルが openCells にセットされていること', () => {
+      // |*|2|1|
+      // |2|*|1|
+      const game = initGame(3, 2, Point.of(0, 0), Point.of(1, 1))
+
+      const view = GameView.wrap(game)
+      game.open(0, 1)
+
+      // この時点では開いたセルのみ
+      const json1 = JSON.stringify(view)
+      const result1 = JSON.parse(json1).openCells.sort(comparePoint)
+      expect(result1).toEqual([{ x: 0, y: 1, count: 2 }])
 
       // 地雷を開いてゲームオーバーになると全て開く
       game.open(0, 0)
 
       const json2 = JSON.stringify(view)
-      const result2 = JSON.parse(json2).mines.sort()
+      const result2 = JSON.parse(json2).openCells.sort(comparePoint)
       expect(result2).toEqual([
-        { x: 0, y: 0 }, { x: 1, y: 1 }
-      ].sort())
+        { x: 0, y: 0, count: 0 }, { x: 1, y: 0, count: 2 }, { x: 2, y: 0, count: 1 },
+        { x: 0, y: 1, count: 2 }, { x: 1, y: 1, count: 0 }, { x: 2, y: 1, count: 1 }
+      ].sort(comparePoint))
     })
   })
 })
