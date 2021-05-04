@@ -13,13 +13,36 @@ describe('POST /api/games', () => {
       return arg
     })
 
-    const game = new Game()
-    game.setting.merge({ width: 3, height: 2, numMines: 1 })
+    const req = { width: 3, height: 2, numMines: 1 }
 
-    const response = await request(app).post('/api/games').send(game)
+    const response = await request(app).post('/api/games').send(req)
 
     expect(response.statusCode).toBe(201)
     expect(response.body.id).toBe(999)
+  })
+
+  test('width がセットされていない場合は 400 エラーになること', async () => {
+    const req = { height: 2, numMines: 1 }
+
+    const response = await request(app).post('/api/games').send(req)
+
+    expect(response.statusCode).toBe(400)
+  })
+
+  test('height がセットされていない場合は 400 エラーになること', async () => {
+    const req = { width: 2, numMines: 1 }
+
+    const response = await request(app).post('/api/games').send(req)
+
+    expect(response.statusCode).toBe(400)
+  })
+
+  test('numMines がセットされていない場合は 400 エラーになること', async () => {
+    const req = { width: 3, height: 2 }
+
+    const response = await request(app).post('/api/games').send(req)
+
+    expect(response.statusCode).toBe(400)
   })
 })
 
