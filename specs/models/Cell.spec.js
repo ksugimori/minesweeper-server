@@ -1,34 +1,21 @@
 const Cell = require('../../lib/models/Cell.js')
+const Point = require('../../lib/models/util/Point.js')
 
 describe('Cell', () => {
   describe('#initialize', () => {
     test('初期状態では count=0, isOpen=false, isMine=false, isFlag=false であること', () => {
-      const cell = new Cell()
+      const cell = new Cell(Point.of(0, 0))
 
       expect(cell.count).toBe(0)
       expect(cell.isOpen).toBe(false)
       expect(cell.isMine).toBe(false)
       expect(cell.isFlag).toBe(false)
     })
-
-    test('パラメータを渡すと初期状態にマージされること', () => {
-      const cell = new Cell({
-        count: 999,
-        isOpen: true,
-        isMine: true,
-        isFlag: true
-      })
-
-      expect(cell.count).toBe(999)
-      expect(cell.isOpen).toBe(true)
-      expect(cell.isMine).toBe(true)
-      expect(cell.isFlag).toBe(true)
-    })
   })
 
   describe('#open', () => {
     test('isOpen が true になること', () => {
-      const cell = new Cell()
+      const cell = new Cell(Point.of(0, 0))
 
       cell.open()
       expect(cell.isOpen).toBe(true)
@@ -41,7 +28,7 @@ describe('Cell', () => {
 
   describe('#mine', () => {
     test('isMine が true になること', () => {
-      const cell = new Cell()
+      const cell = new Cell(Point.of(0, 0))
 
       cell.mine()
       expect(cell.isMine).toBe(true)
@@ -54,7 +41,7 @@ describe('Cell', () => {
 
   describe('#flag', () => {
     test('isFlag が true になること', () => {
-      const cell = new Cell()
+      const cell = new Cell(Point.of(0, 0))
 
       cell.flag()
       expect(cell.isFlag).toBe(true)
@@ -65,7 +52,7 @@ describe('Cell', () => {
     })
 
     test('open 済のセルに対してはフラグは付けられないこと', () => {
-      const cell = new Cell()
+      const cell = new Cell(Point.of(0, 0))
 
       cell.open()
       cell.flag()
@@ -73,7 +60,7 @@ describe('Cell', () => {
     })
 
     test('isMine = false のセルにフラグをつけたら isMiss = true になること', () => {
-      const cell = new Cell()
+      const cell = new Cell(Point.of(0, 0))
 
       cell.flag()
 
@@ -83,7 +70,7 @@ describe('Cell', () => {
 
   describe('#unflag', () => {
     test('isFlag が false になること', () => {
-      const cell = new Cell()
+      const cell = new Cell(Point.of(0, 0))
 
       cell.unflag()
       expect(cell.isFlag).toBe(false)
@@ -96,7 +83,7 @@ describe('Cell', () => {
 
   describe('#isEmpty', () => {
     test('count が 0 なら true を返し、それ以外なら false を返すこと', () => {
-      const cell = new Cell()
+      const cell = new Cell(Point.of(0, 0))
 
       cell.count = 0
       expect(cell.isEmpty).toBeTruthy()
@@ -106,7 +93,7 @@ describe('Cell', () => {
     })
 
     test('count が 0 でも isMine = true なら false を返すこと', () => {
-      const cell = new Cell()
+      const cell = new Cell(Point.of(0, 0))
 
       cell.count = 0
       cell.mine()
