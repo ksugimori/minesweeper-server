@@ -1,4 +1,4 @@
-const gameRepository = require('../../lib/repositories/gameRepository')
+const gameController = require('../../lib/controllers/gameController')
 
 /**
  * status へのルーティングを設定する。
@@ -10,11 +10,8 @@ exports.route = function (router) {
    */
   router.get('/:gameId/status', async function (req, res, next) {
     try {
-      const game = await gameRepository.get(req.params.gameId)
-
-      res.status(200).json({
-        status: game.status.name
-      })
+      const status = await gameController.getStatus(req.params.gameId)
+      res.status(200).json({ status })
     } catch (err) {
       next(err)
     }
