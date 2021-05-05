@@ -28,24 +28,3 @@ describe('GET /api/games/:gameId/status', () => {
     expect(response.body.status).toBe('LOSE')
   })
 })
-
-describe('POST /api/games/:gameId/status', () => {
-  test('禁止されていること', async () => {
-    const response = await request(app).post('/api/games/999/status')
-    expect(response.statusCode).toBe(405)
-  })
-})
-
-describe('PUT /api/games/:gameId/status', () => {
-  test('禁止されていること', async () => {
-    const response = await request(app).put('/api/games/999/status')
-    expect(response.statusCode).toBe(405)
-  })
-})
-
-describe('DELETE /api/games/:gameId/status', () => {
-  test('禁止されていること', async () => {
-    const response = await request(app).delete('/api/games/999/status')
-    expect(response.statusCode).toBe(405)
-  })
-})
