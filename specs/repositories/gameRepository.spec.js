@@ -16,15 +16,13 @@ describe('gameRepository', () => {
       expect(record.height).toBe(2)
     })
 
-    test('地雷、開いているセル、フラグの座標が保存されること', () => {
+    test('地雷、開いているセルの座標が保存されること', () => {
       // |*| | |
       // | |*| |
       const game = mockUtils.initGame(3, 2, Point.of(0, 0), Point.of(1, 1))
 
       game.open(1, 0)
       game.open(2, 0)
-
-      game.flag(1, 1)
 
       // 保存
       const record = gameRepository.toRecord(game)
@@ -35,8 +33,6 @@ describe('gameRepository', () => {
 
       expect(JSON.parse(record.opens)).toContainEqual({ x: 1, y: 0 })
       expect(JSON.parse(record.opens)).toContainEqual({ x: 2, y: 0 })
-
-      expect(JSON.parse(record.flags)).toContainEqual({ x: 1, y: 1 })
     })
 
     test('ステータスが保存されること', () => {
