@@ -1,4 +1,4 @@
-const gameRepository = require('../../lib/repositories/gameRepository')
+const openCellController = require('../../lib/controllers/openCellController')
 
 /**
  * open-cells へのルーティングを設定する。
@@ -10,9 +10,7 @@ exports.route = function (router) {
    */
   router.get('/:gameId/open-cells', async function (req, res, next) {
     try {
-      const game = await gameRepository.get(req.params.gameId)
-      const result = game.field.all().filter(cell => cell.isOpen)
-
+      const result = await openCellController.get(req.params.gameId)
       res.status(200).json(result)
     } catch (err) {
       next(err)
@@ -24,13 +22,7 @@ exports.route = function (router) {
    */
   router.post('/:gameId/open-cells', async function (req, res, next) {
     try {
-      const game = await gameRepository.get(req.params.gameId)
-      const point = { x: req.body.x, y: req.body.y }
-
-      game.open(point.x, point.y)
-      const updated = await gameRepository.update(game)
-
-      const openCells = updated.field.all().filter(cell => cell.isOpen)
+      const openCells = await openCellController.create(req.params.gameId, req.body)
       res.status(201).json(openCells)
     } catch (err) {
       next(err)
