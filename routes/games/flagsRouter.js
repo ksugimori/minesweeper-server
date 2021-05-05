@@ -1,20 +1,4 @@
-const gameRepository = require('../../lib/repositories/gameRepository')
-const Point = require('../../lib/models/util/Point')
-const BadRequestException = require('../../lib/exceptions/BadRequestException')
-
-/**
- * セルIDをパースして Point 型のインスタンスを返す。
- * @param {String} id セルID
- * @returns point
- */
-function parseCellId (id) {
-  try {
-    return Point.parseId(id)
-  } catch (err) {
-    console.error(`invalid ID: ${id}`)
-    throw new BadRequestException('IDが不正です')
-  }
-}
+const flagController = require('../../lib/controllers/flagController')
 
 /**
  * flags へのルーティングを設定する。
@@ -26,8 +10,7 @@ exports.route = function (router) {
    */
   router.get('/:gameId/flags', async function (req, res, next) {
     try {
-      const game = await gameRepository.get(req.params.gameId)
-      const flags = game.field.points(cell => cell.isFlag)
+      const flags = await flagController.get(req.params.gameId)
       res.status(200).json(flags)
     } catch (err) {
       next(err)
@@ -39,18 +22,13 @@ exports.route = function (router) {
    */
   router.post('/:gameId/flags', async function (req, res, next) {
     try {
-      const game = await gameRepository.get(req.params.gameId)
-      const point = { x: req.body.x, y: req.body.y }
+      const point = await flagController.create(req.params.gameId, req.body)
 
-      if (game.field.cellAt(point).isFlag) {
+      if (point) {
+        res.status(201).json(point)
+      } else {
         res.status(204).end()
-        return
       }
-
-      game.flag(point.x, point.y)
-      await gameRepository.update(game)
-
-      res.status(201).json(point)
     } catch (err) {
       next(err)
     }
@@ -61,18 +39,7 @@ exports.route = function (router) {
    */
   router.delete('/:gameId/flags/:id', async function (req, res, next) {
     try {
-      const { gameId, id } = req.params
-
-      const point = parseCellId(id)
-      const game = await gameRepository.get(gameId)
-
-      const cell = game.field.cellAt(point)
-      if (cell.isFlag) {
-        cell.unflag()
-      }
-
-      await gameRepository.update(game)
-
+      await flagController.delete(req.params.gameId, req.params.id)
       res.status(204).end()
     } catch (err) {
       next(err)
