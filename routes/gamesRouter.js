@@ -1,7 +1,6 @@
 const express = require('express')
 const router = express.Router()
-const Game = require('../lib/models/Game')
-const gameRepository = require('../lib/repositories/gameRepository')
+const gameController = require('../lib/controllers/gameController')
 const GameView = require('../lib/views/GameView')
 const exceptionHandler = require('../lib/exceptions/exceptionHandler')
 
@@ -20,14 +19,7 @@ function validateRequest (req, res, next) {
  * Game の作成
  */
 router.post('/', validateRequest, async function (req, res) {
-  const game = new Game()
-
-  game.setting.merge(req.body)
-
-  game.initialize()
-
-  const created = await gameRepository.create(game)
-
+  const created = await gameController.create(req.body)
   res.status(201).json(GameView.wrap(created))
 })
 
@@ -36,7 +28,7 @@ router.post('/', validateRequest, async function (req, res) {
  */
 router.get('/:id', async function (req, res, next) {
   try {
-    const game = await gameRepository.get(req.params.id)
+    const game = await gameController.get(req.params.id)
     res.status(200).json(GameView.wrap(game))
   } catch (err) {
     next(err)
