@@ -1,9 +1,9 @@
 const request = require('supertest')
-const app = require('../../../app.js')
-const Point = require('../../../lib/models/util/Point')
-const gameRepository = require('../../../lib/repositories/gameRepository')
-jest.mock('../../../lib/repositories/gameRepository')
-const mockUtils = require('../../utils/mockUtils')
+const app = require('../../app.js')
+const Point = require('../../lib/models/util/Point')
+const gameRepository = require('../../lib/repositories/gameRepository')
+jest.mock('../../lib/repositories/gameRepository')
+const mockUtils = require('../utils/mockUtils')
 
 describe('GET /api/games/:gameId/open-cells', () => {
   test('開いているセルの一覧が取得できること', async () => {
