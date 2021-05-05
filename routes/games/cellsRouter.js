@@ -11,9 +11,7 @@ exports.route = function (router) {
   router.get('/:gameId/open-cells', async function (req, res, next) {
     try {
       const game = await gameRepository.get(req.params.gameId)
-
-      const result = game.field.points(cell => cell.isOpen)
-        .map(p => game.field.cellAt(p))
+      const result = game.field.all().filter(cell => cell.isOpen)
 
       res.status(200).json(result)
     } catch (err) {
@@ -32,8 +30,7 @@ exports.route = function (router) {
       game.open(point.x, point.y)
       const updated = await gameRepository.update(game)
 
-      const openCells = updated.field.points(cell => cell.isOpen)
-        .map(p => game.field.cellAt(p))
+      const openCells = updated.field.all().filter(cell => cell.isOpen)
       res.status(201).json(openCells)
     } catch (err) {
       next(err)

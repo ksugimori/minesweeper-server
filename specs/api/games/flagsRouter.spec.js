@@ -1,6 +1,5 @@
 const request = require('supertest')
 const app = require('../../../app.js')
-const Point = require('../../../lib/models/util/Point')
 const gameRepository = require('../../../lib/repositories/gameRepository')
 jest.mock('../../../lib/repositories/gameRepository')
 const mockUtils = require('../../utils/mockUtils')
@@ -9,7 +8,7 @@ describe('GET /api/games/:gameId/flags', () => {
   test('フラグの一覧が取得できること', async () => {
     // |1|*|2|
     // |1|2|*|
-    const game = mockUtils.initGame(3, 2, Point.of(1, 0), Point.of(2, 1))
+    const game = mockUtils.initGame(3, 2, { x: 1, y: 0 }, { x: 2, y: 1 })
     game.id = 999
     game.open(0, 0)
 
@@ -29,7 +28,7 @@ describe('POST /api/games/:gameId/flags', () => {
   test('フラグが追加できること', async () => {
     // |1|*|2|
     // |1|2|*|
-    const game = mockUtils.initGame(3, 2, Point.of(1, 0), Point.of(2, 1))
+    const game = mockUtils.initGame(3, 2, { x: 1, y: 0 }, { x: 2, y: 1 })
     game.id = 999
     game.open(0, 0)
     gameRepository.get = jest.fn(() => game)
@@ -47,7 +46,7 @@ describe('POST /api/games/:gameId/flags', () => {
   test('すでにフラグが存在する場合は 204 が返却されること', async () => {
     // |1|*|2|
     // |1|2|*|
-    const game = mockUtils.initGame(3, 2, Point.of(1, 0), Point.of(2, 1))
+    const game = mockUtils.initGame(3, 2, { x: 1, y: 0 }, { x: 2, y: 1 })
     game.id = 999
     game.open(0, 0)
     game.flag(1, 0)
@@ -67,7 +66,7 @@ describe('DELETE /api/games/:gameId/flags/:id', () => {
   test('フラグが外されること', async () => {
     // |1|*|2|
     // |1|2|*|
-    const game = mockUtils.initGame(3, 2, Point.of(1, 0), Point.of(2, 1))
+    const game = mockUtils.initGame(3, 2, { x: 1, y: 0 }, { x: 2, y: 1 })
     game.id = 999
     game.open(0, 0)
 
@@ -80,7 +79,7 @@ describe('DELETE /api/games/:gameId/flags/:id', () => {
 
     expect(response.statusCode).toBe(204)
 
-    expect(game.field.cellAt(Point.of(1, 0)).isFlag).toBeFalsy()
+    expect(game.field.cellAt({ x: 1, y: 0 }).isFlag).toBeFalsy()
   })
 
   test('不正なIDなら 400 エラーが返されること', async () => {
