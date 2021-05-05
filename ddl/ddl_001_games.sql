@@ -6,6 +6,5 @@ CREATE TABLE games (
   startTime TIMESTAMP,
   status VARCHAR(10) DEFAULT 'INIT',
   mines JSON NOT NULL DEFAULT ('[]'),
-  opens JSON NOT NULL DEFAULT ('[]'),
-  flags JSON NOT NULL DEFAULT ('[]')
+  opens JSON NOT NULL DEFAULT ('[]')
 );
