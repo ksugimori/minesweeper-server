@@ -2,6 +2,8 @@ const request = require('supertest')
 const app = require('../../app.js')
 const gameRepository = require('../../lib/repositories/gameRepository')
 jest.mock('../../lib/repositories/gameRepository')
+const openCellRepository = require('../../lib/repositories/openCellRepository')
+jest.mock('../../lib/repositories/openCellRepository')
 const mockUtils = require('../utils/mockUtils')
 
 describe('GET /api/games/:gameId/flags', () => {
@@ -16,6 +18,8 @@ describe('GET /api/games/:gameId/flags', () => {
     game.flag(1, 1)
 
     gameRepository.get = jest.fn(() => game)
+    gameRepository.getStatus = jest.fn(() => 'PLAY')
+    openCellRepository.exists = jest.fn(() => false)
 
     // API コール
     const response = await request(app).get('/api/games/999/flags')
@@ -32,6 +36,8 @@ describe('POST /api/games/:gameId/flags', () => {
     game.id = 999
     game.open(0, 0)
     gameRepository.get = jest.fn(() => game)
+    gameRepository.getStatus = jest.fn(() => 'PLAY')
+    openCellRepository.exists = jest.fn(() => false)
     gameRepository.update = jest.fn((x) => x)
 
     const point = { x: 1, y: 0 }
@@ -39,26 +45,25 @@ describe('POST /api/games/:gameId/flags', () => {
 
     expect(response.statusCode).toBe(201)
     expect(response.body).toEqual({ x: 1, y: 0 })
-
-    expect(game.field.cellAt(point).isFlag).toBeTruthy()
   })
 
-  test('すでにフラグが存在する場合は 204 が返却されること', async () => {
+  test('すでに開かれたセルの場合は 200 が返却されること', async () => {
     // |1|*|2|
     // |1|2|*|
     const game = mockUtils.initGame(3, 2, { x: 1, y: 0 }, { x: 2, y: 1 })
     game.id = 999
     game.open(0, 0)
     game.flag(1, 0)
+
     gameRepository.get = jest.fn(() => game)
+    gameRepository.getStatus = jest.fn(() => 'PLAY')
+    openCellRepository.exists = jest.fn(() => true) // open_cells にレコードが存在する
     gameRepository.update = jest.fn((x) => x)
 
     const point = { x: 1, y: 0 }
     const response = await request(app).post('/api/games/999/flags').send(point)
 
-    expect(response.statusCode).toBe(204)
-
-    expect(game.field.cellAt(point).isFlag).toBeTruthy()
+    expect(response.statusCode).toBe(200)
   })
 })
 
@@ -73,13 +78,13 @@ describe('DELETE /api/games/:gameId/flags/:id', () => {
     game.flag(1, 0)
 
     gameRepository.get = jest.fn(() => game)
+    gameRepository.getStatus = jest.fn(() => 'PLAY')
+    openCellRepository.exists = jest.fn(() => false)
     gameRepository.update = jest.fn((x) => x)
 
     const response = await request(app).delete('/api/games/999/flags/x1y0')
 
     expect(response.statusCode).toBe(204)
-
-    expect(game.field.cellAt({ x: 1, y: 0 }).isFlag).toBeFalsy()
   })
 
   test('不正なIDなら 400 エラーが返されること', async () => {
