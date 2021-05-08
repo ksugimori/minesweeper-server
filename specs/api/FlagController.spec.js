@@ -1,9 +1,9 @@
 const request = require('supertest')
 const app = require('../../app.js')
-const gameRepository = require('../../lib/repositories/gameRepository')
-jest.mock('../../lib/repositories/gameRepository')
-const openCellRepository = require('../../lib/repositories/openCellRepository')
-jest.mock('../../lib/repositories/openCellRepository')
+const gameRepository = require('../../lib/repositories/GameRepository')
+jest.mock('../../lib/repositories/GameRepository')
+const openCellRepository = require('../../lib/repositories/OpenCellRepository')
+jest.mock('../../lib/repositories/OpenCellRepository')
 const mockUtils = require('../utils/mockUtils')
 
 describe('GET /api/games/:gameId/flags', () => {

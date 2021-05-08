@@ -1,4 +1,4 @@
-const gameRepository = require('../../lib/repositories/gameRepository')
+const gameRepository = require('../../lib/repositories/GameRepository')
 const Status = require('../../lib/models/status/Status')
 const Point = require('../../lib/models/util/Point')
 const mockUtils = require('../utils/mockUtils')
