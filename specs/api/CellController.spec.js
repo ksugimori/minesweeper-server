@@ -1,8 +1,8 @@
 const request = require('supertest')
 const app = require('../../app.js')
 const Point = require('../../lib/models/util/Point')
-const gameRepository = require('../../lib/repositories/gameRepository')
-jest.mock('../../lib/repositories/gameRepository')
+const gameRepository = require('../../lib/repositories/GameRepository')
+jest.mock('../../lib/repositories/GameRepository')
 const mockUtils = require('../utils/mockUtils')
 
 describe('GET /api/games/:gameId/open-cells', () => {
