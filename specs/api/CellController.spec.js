@@ -8,10 +8,8 @@ jest.mock('../../lib/repositories/OpenCellRepository')
 const mockUtils = require('../utils/mockUtils')
 
 beforeAll(() => {
-  OpenCellRepository.mockImplementation(() => {
-    return {
-      createAll: () => {}
-    }
+  OpenCellRepository.from = jest.fn().mockReturnValue({
+    createAll: () => {}
   })
 })
 
@@ -26,11 +24,9 @@ describe('GET /api/games/:gameId/open-cells', () => {
     // 0 なので周囲４セルも開かれる
     game.open(0, 2)
 
-    GameRepository.mockImplementation(() => {
-      return {
-        get: () => game,
-        update: (x) => x
-      }
+    GameRepository.from = jest.fn().mockReturnValue({
+      get: () => game,
+      update: (x) => x
     })
 
     // API コール
@@ -56,11 +52,9 @@ describe('POST /api/games/:gameId/open-cells', () => {
     const game = mockUtils.initGame(3, 3, Point.of(1, 0), Point.of(2, 1))
     game.id = 999
 
-    GameRepository.mockImplementation(() => {
-      return {
-        get: () => game,
-        update: (x) => x
-      }
+    GameRepository.from = jest.fn().mockReturnValue({
+      get: () => game,
+      update: (x) => x
     })
 
     //

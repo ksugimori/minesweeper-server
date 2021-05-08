@@ -17,16 +17,12 @@ describe('GET /api/games/:gameId/flags', () => {
     game.flag(2, 0)
     game.flag(1, 1)
 
-    GameRepository.mockImplementation(() => {
-      return {
-        get: () => game,
-        getStatus: () => 'PLAY'
-      }
+    GameRepository.from = jest.fn().mockReturnValue({
+      get: () => game,
+      getStatus: () => 'PLAY'
     })
-    OpenCellRepository.mockImplementation(() => {
-      return {
-        exists: () => false
-      }
+    OpenCellRepository.from = jest.fn().mockReturnValue({
+      exists: () => false
     })
 
     // API コール
@@ -43,17 +39,12 @@ describe('POST /api/games/:gameId/flags', () => {
     const game = mockUtils.initGame(3, 2, { x: 1, y: 0 }, { x: 2, y: 1 })
     game.id = 999
     game.open(0, 0)
-    GameRepository.mockImplementation(() => {
-      return {
-        get: () => game,
-        getStatus: () => 'PLAY',
-        update: (x) => x
-      }
+    GameRepository.from = jest.fn().mockReturnValue({
+      get: () => game,
+      getStatus: () => 'PLAY'
     })
-    OpenCellRepository.mockImplementation(() => {
-      return {
-        exists: () => false
-      }
+    OpenCellRepository.from = jest.fn().mockReturnValue({
+      exists: () => false
     })
 
     const point = { x: 1, y: 0 }
@@ -71,17 +62,13 @@ describe('POST /api/games/:gameId/flags', () => {
     game.open(0, 0)
     game.flag(1, 0)
 
-    GameRepository.mockImplementation(() => {
-      return {
-        get: () => game,
-        getStatus: () => 'PLAY',
-        update: (x) => x
-      }
+    GameRepository.from = jest.fn().mockReturnValue({
+      get: () => game,
+      getStatus: () => 'PLAY',
+      update: (x) => x
     })
-    OpenCellRepository.mockImplementation(() => {
-      return {
-        exists: () => true // open_cells にレコードが存在する
-      }
+    OpenCellRepository.from = jest.fn().mockReturnValue({
+      exists: () => true // open_cells にレコードが存在する
     })
 
     const point = { x: 1, y: 0 }
@@ -101,10 +88,14 @@ describe('DELETE /api/games/:gameId/flags/:id', () => {
 
     game.flag(1, 0)
 
-    GameRepository.get = jest.fn(() => game)
-    GameRepository.getStatus = jest.fn(() => 'PLAY')
-    OpenCellRepository.exists = jest.fn(() => false)
-    GameRepository.update = jest.fn((x) => x)
+    GameRepository.from = jest.fn().mockReturnValue({
+      get: () => game,
+      getStatus: () => 'PLAY',
+      update: (x) => x
+    })
+    OpenCellRepository.from = jest.fn().mockReturnValue({
+      exists: () => false
+    })
 
     const response = await request(app).delete('/api/games/999/flags/x1y0')
 
