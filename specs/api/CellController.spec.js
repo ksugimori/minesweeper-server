@@ -1,9 +1,19 @@
 const request = require('supertest')
 const app = require('../../app.js')
 const Point = require('../../lib/models/util/Point')
-const gameRepository = require('../../lib/repositories/GameRepository')
+const GameRepository = require('../../lib/repositories/GameRepository')
 jest.mock('../../lib/repositories/GameRepository')
+const OpenCellRepository = require('../../lib/repositories/OpenCellRepository')
+jest.mock('../../lib/repositories/OpenCellRepository')
 const mockUtils = require('../utils/mockUtils')
+
+beforeAll(() => {
+  OpenCellRepository.mockImplementation(() => {
+    return {
+      createAll: () => {}
+    }
+  })
+})
 
 describe('GET /api/games/:gameId/open-cells', () => {
   test('開いているセルの一覧が取得できること', async () => {
@@ -16,7 +26,12 @@ describe('GET /api/games/:gameId/open-cells', () => {
     // 0 なので周囲４セルも開かれる
     game.open(0, 2)
 
-    gameRepository.get = jest.fn(() => game)
+    GameRepository.mockImplementation(() => {
+      return {
+        get: () => game,
+        update: (x) => x
+      }
+    })
 
     // API コール
     const response = await request(app).get('/api/games/999/open-cells')
@@ -41,8 +56,12 @@ describe('POST /api/games/:gameId/open-cells', () => {
     const game = mockUtils.initGame(3, 3, Point.of(1, 0), Point.of(2, 1))
     game.id = 999
 
-    gameRepository.get = jest.fn(() => game)
-    gameRepository.update = jest.fn((x) => x)
+    GameRepository.mockImplementation(() => {
+      return {
+        get: () => game,
+        update: (x) => x
+      }
+    })
 
     //
     // テスト
@@ -73,8 +92,12 @@ describe('DELETE /api/games/:gameId/open-cells/:id', () => {
     game.id = 999
     game.open(0, 0)
 
-    gameRepository.get = jest.fn(() => game)
-    gameRepository.update = jest.fn((x) => x)
+    GameRepository.mockImplementation(() => {
+      return {
+        get: () => game,
+        update: (x) => x
+      }
+    })
 
     const response = await request(app).delete('/api/games/999/open-cells/0_0')
 

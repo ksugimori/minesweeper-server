@@ -1,8 +1,8 @@
 const request = require('supertest')
 const app = require('../../app.js')
-const gameRepository = require('../../lib/repositories/GameRepository')
+const GameRepository = require('../../lib/repositories/GameRepository')
 jest.mock('../../lib/repositories/GameRepository')
-const openCellRepository = require('../../lib/repositories/OpenCellRepository')
+const OpenCellRepository = require('../../lib/repositories/OpenCellRepository')
 jest.mock('../../lib/repositories/OpenCellRepository')
 const mockUtils = require('../utils/mockUtils')
 
@@ -17,9 +17,17 @@ describe('GET /api/games/:gameId/flags', () => {
     game.flag(2, 0)
     game.flag(1, 1)
 
-    gameRepository.get = jest.fn(() => game)
-    gameRepository.getStatus = jest.fn(() => 'PLAY')
-    openCellRepository.exists = jest.fn(() => false)
+    GameRepository.mockImplementation(() => {
+      return {
+        get: () => game,
+        getStatus: () => 'PLAY'
+      }
+    })
+    OpenCellRepository.mockImplementation(() => {
+      return {
+        exists: () => false
+      }
+    })
 
     // API コール
     const response = await request(app).get('/api/games/999/flags')
@@ -35,10 +43,18 @@ describe('POST /api/games/:gameId/flags', () => {
     const game = mockUtils.initGame(3, 2, { x: 1, y: 0 }, { x: 2, y: 1 })
     game.id = 999
     game.open(0, 0)
-    gameRepository.get = jest.fn(() => game)
-    gameRepository.getStatus = jest.fn(() => 'PLAY')
-    openCellRepository.exists = jest.fn(() => false)
-    gameRepository.update = jest.fn((x) => x)
+    GameRepository.mockImplementation(() => {
+      return {
+        get: () => game,
+        getStatus: () => 'PLAY',
+        update: (x) => x
+      }
+    })
+    OpenCellRepository.mockImplementation(() => {
+      return {
+        exists: () => false
+      }
+    })
 
     const point = { x: 1, y: 0 }
     const response = await request(app).post('/api/games/999/flags').send(point)
@@ -55,10 +71,18 @@ describe('POST /api/games/:gameId/flags', () => {
     game.open(0, 0)
     game.flag(1, 0)
 
-    gameRepository.get = jest.fn(() => game)
-    gameRepository.getStatus = jest.fn(() => 'PLAY')
-    openCellRepository.exists = jest.fn(() => true) // open_cells にレコードが存在する
-    gameRepository.update = jest.fn((x) => x)
+    GameRepository.mockImplementation(() => {
+      return {
+        get: () => game,
+        getStatus: () => 'PLAY',
+        update: (x) => x
+      }
+    })
+    OpenCellRepository.mockImplementation(() => {
+      return {
+        exists: () => true // open_cells にレコードが存在する
+      }
+    })
 
     const point = { x: 1, y: 0 }
     const response = await request(app).post('/api/games/999/flags').send(point)
@@ -77,10 +101,10 @@ describe('DELETE /api/games/:gameId/flags/:id', () => {
 
     game.flag(1, 0)
 
-    gameRepository.get = jest.fn(() => game)
-    gameRepository.getStatus = jest.fn(() => 'PLAY')
-    openCellRepository.exists = jest.fn(() => false)
-    gameRepository.update = jest.fn((x) => x)
+    GameRepository.get = jest.fn(() => game)
+    GameRepository.getStatus = jest.fn(() => 'PLAY')
+    OpenCellRepository.exists = jest.fn(() => false)
+    GameRepository.update = jest.fn((x) => x)
 
     const response = await request(app).delete('/api/games/999/flags/x1y0')
 
