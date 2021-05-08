@@ -8,12 +8,10 @@ jest.mock('../../lib/repositories/GameRepository')
 describe('POST /api/games', () => {
   test('Game オブジェクトが返されること', async () => {
     // INSERT 時に ID が割り当てられる挙動をモックで再現
-    GameRepository.mockImplementation(() => {
-      return {
-        create: arg => {
-          arg.id = 999
-          return arg
-        }
+    GameRepository.from = jest.fn().mockReturnValue({
+      create: arg => {
+        arg.id = 999
+        return arg
       }
     })
 
@@ -54,10 +52,8 @@ describe('GET /api/games/{id}', () => {
   test('取得できた場合はステータス 200 が返ること', async () => {
     const game = new Game()
     game.id = 999
-    GameRepository.mockImplementation(() => {
-      return {
-        get: () => game
-      }
+    GameRepository.from = jest.fn().mockReturnValue({
+      get: () => game
     })
 
     const response = await request(app).get('/api/games/1')
@@ -67,11 +63,9 @@ describe('GET /api/games/{id}', () => {
   })
 
   test('取得できなかった場合はステータス 404 が返ること', async () => {
-    GameRepository.mockImplementation(() => {
-      return {
-        get: () => {
-          throw new DataNotFoundException()
-        }
+    GameRepository.from = jest.fn().mockReturnValue({
+      get: () => {
+        throw new DataNotFoundException()
       }
     })
 

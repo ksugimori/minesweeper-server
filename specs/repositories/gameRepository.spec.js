@@ -3,6 +3,8 @@ const Status = require('../../lib/models/status/Status')
 const Point = require('../../lib/models/util/Point')
 const mockUtils = require('../utils/mockUtils')
 
+const gameRepository = new GameRepository()
+
 describe('gameRepository', () => {
   describe('#toRecord', () => {
     test('width, height が保存されること', () => {
@@ -10,7 +12,6 @@ describe('gameRepository', () => {
       // | |*| |
       const game = mockUtils.initGame(3, 2, Point.of(0, 0), Point.of(1, 1))
 
-      const gameRepository = new GameRepository()
       const record = gameRepository.toRecord(game)
 
       expect(record.width).toBe(3)
@@ -25,7 +26,6 @@ describe('gameRepository', () => {
       game.open(0, 0)
 
       // 保存
-      const gameRepository = new GameRepository()
       const record = gameRepository.toRecord(game)
 
       // 検証
@@ -67,7 +67,6 @@ describe('gameRepository', () => {
         startTime: new Date('2021-01-02T03:04:05.678')
       }
 
-      const gameRepository = new GameRepository()
       const game = gameRepository.restore(record)
 
       expect(game.setting.width).toBe(4)
@@ -92,7 +91,6 @@ describe('gameRepository', () => {
     })
 
     test('復元して続きがプレイできること', () => {
-      const gameRepository = new GameRepository()
       const game = gameRepository.restore({
         width: 2,
         height: 2,
