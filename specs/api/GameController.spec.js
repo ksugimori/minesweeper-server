@@ -4,6 +4,15 @@ const Game = require('../../lib/models/Game')
 const DataNotFoundException = require('../../lib/exceptions/DataNotFoundException')
 const GameRepository = require('../../lib/repositories/GameRepository')
 jest.mock('../../lib/repositories/GameRepository')
+const pool = require('../../lib/db/pool')
+jest.mock('../../lib/db/pool')
+
+beforeAll(() => {
+  pool.promise = jest.fn(() => ({
+    query: () => {},
+    releaseConnection: () => {}
+  }))
+})
 
 describe('POST /api/games', () => {
   test('Game オブジェクトが返されること', async () => {

@@ -6,8 +6,15 @@ jest.mock('../../lib/repositories/GameRepository')
 const OpenCellRepository = require('../../lib/repositories/OpenCellRepository')
 jest.mock('../../lib/repositories/OpenCellRepository')
 const mockUtils = require('../utils/mockUtils')
+const pool = require('../../lib/db/pool')
+jest.mock('../../lib/db/pool')
 
 beforeAll(() => {
+  pool.promise = jest.fn(() => ({
+    query: () => {},
+    releaseConnection: () => {}
+  }))
+
   OpenCellRepository.from = jest.fn().mockReturnValue({
     createAll: () => {}
   })

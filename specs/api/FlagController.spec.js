@@ -1,10 +1,21 @@
 const request = require('supertest')
 const app = require('../../app.js')
-const GameRepository = require('../../lib/repositories/GameRepository')
-jest.mock('../../lib/repositories/GameRepository')
-const OpenCellRepository = require('../../lib/repositories/OpenCellRepository')
-jest.mock('../../lib/repositories/OpenCellRepository')
 const mockUtils = require('../utils/mockUtils')
+const GameRepository = require('../../lib/repositories/GameRepository')
+const FlagRepository = require('../../lib/repositories/FlagRepository')
+const OpenCellRepository = require('../../lib/repositories/OpenCellRepository')
+const pool = require('../../lib/db/pool')
+jest.mock('../../lib/repositories/GameRepository')
+jest.mock('../../lib/repositories/FlagRepository')
+jest.mock('../../lib/repositories/OpenCellRepository')
+jest.mock('../../lib/db/pool')
+
+beforeAll(() => {
+  pool.promise = jest.fn(() => ({
+    query: () => {},
+    releaseConnection: () => {}
+  }))
+})
 
 describe('GET /api/games/:gameId/flags', () => {
   test('フラグの一覧が取得できること', async () => {
@@ -45,6 +56,9 @@ describe('POST /api/games/:gameId/flags', () => {
     })
     OpenCellRepository.from = jest.fn().mockReturnValue({
       exists: () => false
+    })
+    FlagRepository.from = jest.fn().mockReturnValue({
+      create: () => {}
     })
 
     const point = { x: 1, y: 0 }
@@ -92,6 +106,9 @@ describe('DELETE /api/games/:gameId/flags/:id', () => {
       get: () => game,
       getStatus: () => 'PLAY',
       update: (x) => x
+    })
+    FlagRepository.from = jest.fn().mockReturnValue({
+      delete: () => {}
     })
     OpenCellRepository.from = jest.fn().mockReturnValue({
       exists: () => false
