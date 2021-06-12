@@ -5,6 +5,8 @@ const GameRepository = require('../../lib/repositories/GameRepository')
 jest.mock('../../lib/repositories/GameRepository')
 const OpenCellRepository = require('../../lib/repositories/OpenCellRepository')
 jest.mock('../../lib/repositories/OpenCellRepository')
+const MineRepository = require('../../lib/repositories/MineRepository')
+jest.mock('../../lib/repositories/MineRepository')
 const mockUtils = require('../utils/mockUtils')
 const pool = require('../../lib/db/pool')
 jest.mock('../../lib/db/pool')
@@ -16,6 +18,10 @@ beforeAll(() => {
   }))
 
   OpenCellRepository.from = jest.fn().mockReturnValue({
+    createAll: () => {}
+  })
+
+  MineRepository.from = jest.fn().mockReturnValue({
     createAll: () => {}
   })
 })
@@ -33,7 +39,8 @@ describe('GET /api/games/:gameId/open-cells', () => {
 
     GameRepository.from = jest.fn().mockReturnValue({
       get: () => game,
-      update: (x) => x
+      update: (x) => x,
+      updateStatus: () => {}
     })
 
     // API コール
@@ -61,7 +68,8 @@ describe('POST /api/games/:gameId/open-cells', () => {
 
     GameRepository.from = jest.fn().mockReturnValue({
       get: () => game,
-      update: (x) => x
+      update: (x) => x,
+      updateStatus: () => {}
     })
 
     //
@@ -96,7 +104,8 @@ describe('DELETE /api/games/:gameId/open-cells/:id', () => {
     GameRepository.mockImplementation(() => {
       return {
         get: () => game,
-        update: (x) => x
+        update: (x) => x,
+        updateStatus: () => {}
       }
     })
 

@@ -18,21 +18,6 @@ describe('gameRepository', () => {
       expect(record.height).toBe(2)
     })
 
-    test('地雷セルの座標が保存されること', () => {
-      // |*| | |
-      // | |*| |
-      const game = mockUtils.initGame(3, 2, Point.of(0, 0), Point.of(1, 1))
-
-      game.open(0, 0)
-
-      // 保存
-      const record = gameRepository.toRecord(game)
-
-      // 検証
-      expect(JSON.parse(record.mines)).toContainEqual({ x: 0, y: 0 })
-      expect(JSON.parse(record.mines)).toContainEqual({ x: 1, y: 1 })
-    })
-
     test('ステータスが保存されること', () => {
       // |*| | |
       // | |*| |
