@@ -4,6 +4,5 @@ CREATE TABLE games (
   height INT NOT NULL,
   numMines INT NOT NULL,
   startTime TIMESTAMP,
-  status VARCHAR(10) DEFAULT 'INIT',
-  mines JSON NOT NULL DEFAULT ('[]')
+  status VARCHAR(10) DEFAULT 'INIT'
 );
