@@ -8,10 +8,12 @@ const pool = require('../../lib/db/pool')
 jest.mock('../../lib/db/pool')
 
 beforeAll(() => {
-  pool.promise = jest.fn(() => ({
-    query: () => {},
-    releaseConnection: () => {}
-  }))
+  pool.promise = () => ({
+    getConnection: () => ({
+      query: () => {},
+      release: () => {}
+    })
+  })
 })
 
 describe('POST /api/games', () => {

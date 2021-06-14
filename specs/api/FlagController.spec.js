@@ -11,10 +11,12 @@ jest.mock('../../lib/repositories/OpenCellRepository')
 jest.mock('../../lib/db/pool')
 
 beforeAll(() => {
-  pool.promise = jest.fn(() => ({
-    query: () => {},
-    releaseConnection: () => {}
-  }))
+  pool.promise = () => ({
+    getConnection: () => ({
+      query: () => {},
+      release: () => {}
+    })
+  })
 })
 
 describe('GET /api/games/:gameId/flags', () => {
