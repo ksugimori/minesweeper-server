@@ -118,4 +118,60 @@ describe('Cell', () => {
       expect(cell.isEmpty).toBeFalsy()
     })
   })
+
+  describe('isChanged', () => {
+    test('変更がなければ false が返ること', () => {
+      const cell = new Cell(Point.of(0, 0))
+
+      expect(cell.isChanged).toBeFalsy()
+    })
+
+    test('count を変更したら true が返ること', () => {
+      const cell = new Cell(Point.of(0, 0))
+
+      // 同じ値をセットしても false であること
+      cell.count = 0
+      expect(cell.isChanged).toBeFalsy()
+
+      // 違う値をセットすると true になること
+      cell.count = 1
+      expect(cell.isChanged).toBeTruthy()
+    })
+
+    test('isMine を変更したら true が返ること', () => {
+      const cell = new Cell(Point.of(0, 0))
+
+      // 同じ値をセットしても false であること
+      cell.isMine = false
+      expect(cell.isChanged).toBeFalsy()
+
+      // 違う値をセットすると true であること
+      cell.isMine = true
+      expect(cell.isChanged).toBeTruthy()
+    })
+
+    test('isFlag を変更したら true が返ること', () => {
+      const cell = new Cell(Point.of(0, 0))
+
+      // 同じ値をセットしても false であること
+      cell.isFlag = false
+      expect(cell.isChanged).toBeFalsy()
+
+      // 違う値をセットすると true であること
+      cell.isFlag = true
+      expect(cell.isChanged).toBeTruthy()
+    })
+
+    test('isOpen を変更したら true が返ること', () => {
+      const cell = new Cell(Point.of(0, 0))
+
+      // 同じ値をセットしても false であること
+      cell.isOpen = false
+      expect(cell.isChanged).toBeFalsy()
+
+      // 違う値をセットすると true であること
+      cell.isOpen = true
+      expect(cell.isChanged).toBeTruthy()
+    })
+  })
 })
