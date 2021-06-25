@@ -3,10 +3,8 @@ const app = require('../../app.js')
 const Point = require('../../lib/models/util/Point')
 const GameRepository = require('../../lib/repositories/GameRepository')
 jest.mock('../../lib/repositories/GameRepository')
-const OpenCellRepository = require('../../lib/repositories/OpenCellRepository')
-jest.mock('../../lib/repositories/OpenCellRepository')
-const MineRepository = require('../../lib/repositories/MineRepository')
-jest.mock('../../lib/repositories/MineRepository')
+const CellRepository = require('../../lib/repositories/CellRepository')
+jest.mock('../../lib/repositories/CellRepository')
 const mockUtils = require('../utils/mockUtils')
 const pool = require('../../lib/db/pool')
 jest.mock('../../lib/db/pool')
@@ -19,11 +17,7 @@ beforeAll(() => {
     })
   })
 
-  OpenCellRepository.from = jest.fn().mockReturnValue({
-    createAll: () => {}
-  })
-
-  MineRepository.from = jest.fn().mockReturnValue({
+  CellRepository.from = jest.fn().mockReturnValue({
     createAll: () => {}
   })
 })
