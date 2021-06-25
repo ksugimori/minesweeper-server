@@ -46,9 +46,10 @@ describe('gameRepository', () => {
         height: 3,
         numMines: 2,
         status: 'PLAY',
-        mines: [{ x: 0, y: 0 }, { x: 1, y: 1 }],
-        opens: [{ x: 1, y: 0 }, { x: 2, y: 0 }],
-        flags: [{ x: 1, y: 1 }],
+        cells: [
+          { x: 0, y: 0, isMine: true }, { x: 1, y: 0, isOpen: true }, { x: 2, y: 0, isOpen: true },
+          { x: 0, y: 1 }, { x: 1, y: 1, isMine: true, isFlag: true }, { x: 2, y: 1 }
+        ],
         startTime: new Date('2021-01-02T03:04:05.678')
       }
 
@@ -80,9 +81,10 @@ describe('gameRepository', () => {
         width: 2,
         height: 2,
         numMines: 2,
-        mines: [{ x: 0, y: 0 }, { x: 1, y: 1 }],
-        opens: [{ x: 1, y: 0 }],
-        flags: [],
+        cells: [
+          { x: 0, y: 0, isMine: true }, { x: 1, y: 0, isOpen: true }, { x: 2, y: 0 },
+          { x: 0, y: 1 }, { x: 1, y: 1, isMine: true }, { x: 2, y: 1 }
+        ],
         status: 'PLAY'
       })
 
