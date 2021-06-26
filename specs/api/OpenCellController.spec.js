@@ -18,7 +18,7 @@ beforeAll(() => {
   })
 
   CellRepository.from = jest.fn().mockReturnValue({
-    createAll: () => {}
+    upsertAll: () => {}
   })
 })
 

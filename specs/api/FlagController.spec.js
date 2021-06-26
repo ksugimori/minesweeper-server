@@ -61,7 +61,7 @@ describe('POST /api/games/:gameId/flags', () => {
       get: () => game
     })
     CellRepository.from = jest.fn().mockReturnValue({
-      createAll: () => {}
+      upsertAll: () => {}
     })
 
     const point = { x: 1, y: 0 }
