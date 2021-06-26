@@ -4,5 +4,6 @@ CREATE TABLE games (
   height INT NOT NULL,
   numMines INT NOT NULL,
   startTime TIMESTAMP,
+  endTime TIMESTAMP,
   status VARCHAR(10) DEFAULT 'INIT'
 );
