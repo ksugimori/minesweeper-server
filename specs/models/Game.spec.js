@@ -1,8 +1,6 @@
 const Game = require('../../lib/models/Game.js')
 const Status = require('../../lib/models/status/Status.js')
 const Point = require('../../lib/models/util/Point.js')
-const StopWatch = require('../../lib/models/util/StopWatch.js')
-jest.mock('../../lib/models/util/StopWatch.js')
 const mockUtils = require('../utils/mockUtils')
 
 /**
@@ -13,13 +11,6 @@ const mockUtils = require('../utils/mockUtils')
 function extractRows (game, mapFunc) {
   return game.field.rows.map(row => row.map(mapFunc))
 }
-
-/**
- * 前処理
- */
-beforeEach(() => {
-  StopWatch.mockClear()
-})
 
 /**
  * テストケース

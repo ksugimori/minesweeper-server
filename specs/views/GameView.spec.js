@@ -87,6 +87,20 @@ describe('GameView', () => {
       const json = JSON.stringify(view)
       const result = JSON.parse(json)
       expect(result.startTime).toMatch(/\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}.\d{3}Z/)
+      expect(result.endTime).toBeNull()
+    })
+
+    test('endTime がISO8601フォーマットの文字列として反映されること', () => {
+      const game = initGame(2, 3, Point.of(0, 0), Point.of(1, 1))
+
+      const view = GameView.wrap(game)
+      game.open(1, 0)
+      game.open(1, 1) // 地雷
+
+      const json = JSON.stringify(view)
+      const result = JSON.parse(json)
+      expect(result.startTime).toMatch(/\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}.\d{3}Z/)
+      expect(result.endTime).toMatch(/\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}.\d{3}Z/)
     })
 
     test('cells にすべてのセルがセットされていること', () => {
