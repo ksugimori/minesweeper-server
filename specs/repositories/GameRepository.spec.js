@@ -5,6 +5,21 @@ const mockUtils = require('../utils/mockUtils')
 
 const gameRepository = new GameRepository()
 
+/**
+ * 未設定のプロパティに false を設定して Cell を補完する。
+ * @param {Object} obj Cell
+ * @returns フラグ類を補完した Cell の配列
+ */
+function fillFalse (obj) {
+  return {
+    x: obj.x,
+    y: obj.y,
+    isMine: !!obj.isMine,
+    isOpen: !!obj.isOpen,
+    isFlag: !!obj.isFlag
+  }
+}
+
 describe('gameRepository', () => {
   describe('#toRecord', () => {
     test('width, height が保存されること', () => {
@@ -49,7 +64,7 @@ describe('gameRepository', () => {
         cells: [
           { x: 0, y: 0, isMine: true }, { x: 1, y: 0, isOpen: true }, { x: 2, y: 0, isOpen: true },
           { x: 0, y: 1 }, { x: 1, y: 1, isMine: true, isFlag: true }, { x: 2, y: 1 }
-        ],
+        ].map(e => fillFalse(e)),
         startTime: new Date('2021-01-02T03:04:05.678')
       }
 
@@ -84,7 +99,7 @@ describe('gameRepository', () => {
         cells: [
           { x: 0, y: 0, isMine: true }, { x: 1, y: 0, isOpen: true }, { x: 2, y: 0 },
           { x: 0, y: 1 }, { x: 1, y: 1, isMine: true }, { x: 2, y: 1 }
-        ],
+        ].map(e => fillFalse(e)),
         status: 'PLAY'
       })
 
