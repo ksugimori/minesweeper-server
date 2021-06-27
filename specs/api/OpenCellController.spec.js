@@ -36,7 +36,7 @@ describe('GET /api/games/:gameId/open-cells', () => {
     GameRepository.use = jest.fn().mockReturnValue({
       get: () => game,
       update: (x) => x,
-      startGame: () => {}
+      updateToStart: () => {}
     })
 
     // API コール
@@ -65,7 +65,7 @@ describe('POST /api/games/:gameId/open-cells', () => {
     GameRepository.use = jest.fn().mockReturnValue({
       get: () => game,
       update: (x) => x,
-      startGame: () => {}
+      updateToStart: () => {}
     })
 
     //
@@ -101,7 +101,7 @@ describe('DELETE /api/games/:gameId/open-cells/:id', () => {
       return {
         get: () => game,
         update: (x) => x,
-        startGame: () => {}
+        updateToStart: () => {}
       }
     })
 
