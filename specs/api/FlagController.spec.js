@@ -33,7 +33,7 @@ describe('GET /api/games/:gameId/flags', () => {
     })
     game.status = Status.PLAY
 
-    GameRepository.from = jest.fn().mockReturnValue({
+    GameRepository.use = jest.fn().mockReturnValue({
       get: () => game
     })
 
@@ -57,10 +57,10 @@ describe('POST /api/games/:gameId/flags', () => {
     })
     game.status = Status.PLAY
 
-    GameRepository.from = jest.fn().mockReturnValue({
+    GameRepository.use = jest.fn().mockReturnValue({
       get: () => game
     })
-    CellRepository.from = jest.fn().mockReturnValue({
+    CellRepository.use = jest.fn().mockReturnValue({
       upsertAll: () => {}
     })
 
@@ -84,7 +84,7 @@ describe('POST /api/games/:gameId/flags', () => {
     })
     game.status = Status.PLAY
 
-    GameRepository.from = jest.fn().mockReturnValue({
+    GameRepository.use = jest.fn().mockReturnValue({
       get: () => game,
       update: (x) => x
     })
@@ -111,7 +111,7 @@ describe('DELETE /api/games/:gameId/flags/:id', () => {
     })
     game.status = Status.PLAY
 
-    GameRepository.from = jest.fn().mockReturnValue({
+    GameRepository.use = jest.fn().mockReturnValue({
       get: () => game,
       update: (x) => x
     })
